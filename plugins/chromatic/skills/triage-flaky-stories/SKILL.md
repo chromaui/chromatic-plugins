@@ -78,7 +78,7 @@ for the causes Chromatic's unstable-tests guide names:
 | `Math.random`, generated ids, faker without a seed     | Fixed input data, or a seeded generator                                              |
 | `new Date()`, `Date.now()`, relative times              | A fixed date in the story, for example with `mockdate`                                 |
 | CSS or JavaScript animation                            | `chromatic: { pauseAnimationAtEnd: true }`, or turn the animation off under `isChromatic()` |
-| Web fonts or images from a remote host                 | Serve them as static files and preload fonts                                          |
+| Web fonts or images from a remote host                 | Serve them as static files and preload fonts, or wait for `document.fonts.ready` in a loader |
 | Data from the network                                  | Mock it in the story, the same way the project's other stories do                    |
 | Content that settles after render                      | Wait for it in a `play` function. A `chromatic.delay` hides the problem, not fixes it |
 | A region that is meant to change, such as a clock      | `chromatic: { ignoreSelectors: [...] }` for that element only                         |
@@ -86,8 +86,9 @@ for the causes Chromatic's unstable-tests guide names:
 For each test Chromatic found unstable, run the how-one-story-was-captured
 recipe from the `query-chromatic` skill
 ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
-with its `storyId`, on the build that ignored it. `links.trace` is a Playwright trace of the capture: what the page
-loaded, ran and looked like as it was captured. Give the user
+with its `storyId`, on the build that ignored it. `links.trace` is a
+Playwright trace of the capture: what the page loaded, ran and looked like as
+it was captured. Give the user
 `https://trace.playwright.dev/?trace=<the link, URL-encoded>` to open it. A
 `RESOURCES_FAILED_TO_LOAD` warning names a font or image that did not load in
 time, which is the remote-assets row above. When `links.trace` is null, the
