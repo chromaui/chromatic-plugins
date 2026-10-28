@@ -11,6 +11,11 @@
   "homepage": "https://www.chromatic.com/docs/mcp",
   "repository": "https://github.com/chromaui/chromatic-plugins",
   "license": "MIT",
+  "icon": "./.claude-plugin/icon.png",
+  "documentationUrl": "https://www.chromatic.com/docs/mcp",
+  "supportUrl": "https://www.chromatic.com/docs/support",
+  "privacyPolicyUrl": "https://www.chromatic.com/docs/privacy-policy",
+  "termsOfServiceUrl": "https://www.chromatic.com/docs/terms-of-service",
   "hooks": "./hooks/claude-code.json",
   "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"]
 }
