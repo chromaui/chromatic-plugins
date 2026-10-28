@@ -22,12 +22,14 @@ own fields first; they usually name the limit that was hit.
 
 ## Warnings
 
-A capture's `warnings` say what went wrong without stopping it. A broken
-story can carry them too, and they often name the cause of a timeout.
+A capture's `warnings` say what went wrong without stopping it, so only a
+capture that went through has them. For a broken story, read them on its
+captures in other modes or browsers, or on sibling stories that share the
+asset.
 
 | Kind                       | What happened                                                 | Where to look                                                                                                               |
 | -------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `RESOURCES_FAILED_TO_LOAD` | The images, fonts or scripts in `urls` had not loaded in time | Search the repository for each path: a file missing from the static directory, a remote host, or an asset too large to load |
+| `RESOURCES_FAILED_TO_LOAD` | The images, fonts or scripts in `urls` had not loaded in time | Search the repository for each path: a file missing from the static directory, or a remote host the capture browser cannot reach |
 
 ## Timeouts are symptoms
 
