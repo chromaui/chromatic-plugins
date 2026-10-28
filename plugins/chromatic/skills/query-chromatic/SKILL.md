@@ -83,5 +83,13 @@ A field selected on the interface that only a state has is refused.
   visible to this login. Say which id you asked about; do not retry with a
   guessed one.
 
+## How Chromatic works
+
+The API holds data, not guidance. For how a feature works or how to set
+something up, such as TurboSnap, modes, delays or font loading, read the docs
+index at https://www.chromatic.com/docs/llms.txt and fetch the page it lists.
+Each page is plain text written for agents, and it is kept current, so prefer
+it to a web search.
+
 See [conventions](references/conventions.md) for id formats, pagination, and
 what the API cannot answer.
