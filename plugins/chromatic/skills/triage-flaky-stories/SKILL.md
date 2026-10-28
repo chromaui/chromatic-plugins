@@ -83,9 +83,17 @@ for the causes Chromatic's unstable-tests guide names:
 | Content that settles after render                      | Wait for it in a `play` function. A `chromatic.delay` hides the problem, not fixes it |
 | A region that is meant to change, such as a clock      | `chromatic: { ignoreSelectors: [...] }` for that element only                         |
 
-When the code shows none of these, say so. Chromatic's trace for the test
-shows what changed between captures; give the user the test's `webUrl` to
-open it.
+For each test Chromatic found unstable, run the how-one-story-was-captured
+recipe from the `query-chromatic` skill
+([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
+with its `storyId`, on the build that ignored it. `links.trace` is a Playwright trace of the capture: what the page
+loaded, ran and looked like as it was captured. Give the user
+`https://trace.playwright.dev/?trace=<the link, URL-encoded>` to open it. A
+`RESOURCES_FAILED_TO_LOAD` warning names a font or image that did not load in
+time, which is the remote-assets row above. When `links.trace` is null, the
+capture was not traced; give the test's `webUrl` instead.
+
+When neither the code nor the capture shows a cause, say so.
 
 ### 4. Fix and report
 
@@ -94,6 +102,7 @@ the story's snapshot or raise its diff threshold unless the user asks: that
 removes the coverage rather than the flake.
 
 Report, for each story: why it was hidden (quarantine or flake filter), the
-cause you found, the change you made or propose, and its `webUrl`. The fix is
-confirmed only by later builds where the story renders stably; offer the
-`run-build` skill for the changed stories.
+cause you found, the change you made or propose, its trace viewer link when
+it has a trace, and its `webUrl`. The fix is confirmed only by later builds
+where the story renders stably; offer the `run-build` skill for the changed
+stories.

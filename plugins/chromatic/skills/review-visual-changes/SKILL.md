@@ -119,6 +119,29 @@ large.
     shows text, layout or color moving where the code did not ask for it.
   - **Unclear**: say what you could not tell, and why.
 
+Before you call a change a regression, check how it was captured. Do this
+only for a change the code does not explain: the links are long, and most
+changes need no more than the pictures. Run the how-one-story-was-captured
+recipe ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
+with its `storyId`.
+
+- A `RESOURCES_FAILED_TO_LOAD` warning names the fonts, images or scripts
+  that had not loaded when the snapshot was taken. A fallback font or a
+  missing image then looks like a change, but the code did not cause it.
+- `links.domSnapshot` is the HTML the story rendered. Download it and look
+  for what the snapshot should show: the right text, an element mid
+  animation, a loading state.
+- `links.trace` is a Playwright trace of the capture. Give the person
+  `https://trace.playwright.dev/?trace=<the link, URL-encoded>` when it would
+  help them see it for themselves.
+
+When the capture explains the change, keep it a **Check** and say it looks
+like a capture problem rather than a regression of this branch: name the
+resource that did not load, or what the page was doing. Suggest rerunning the
+build, and the fix in the story, such as serving the font from Storybook's
+static directory. Do not offer to accept it: the new baseline would hold the
+broken render.
+
 When the same change repeats across many stories (a shared component, a
 token), judge it once and say how many stories it covers.
 
@@ -128,8 +151,9 @@ The review is for the person, and the visual part of it is looking. Give them
 pictures, not only links.
 
 1. **Check** changes first. For each: the story and mode, one line on what
-   moved and why it does not match the code, and its before, after and diff
-   pictures, cropped to the change.
+   moved and why it does not match the code (or what went wrong while
+   capturing it), and its before, after and diff pictures, cropped to the
+   change.
 2. **Expected** changes, folded into groups with a count and one example
    picture each, such as "9 stories: Button padding".
 3. **Not reviewed**: changes already waiting on the default branch, with the

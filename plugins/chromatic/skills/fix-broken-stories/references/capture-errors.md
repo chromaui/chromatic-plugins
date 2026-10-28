@@ -20,6 +20,15 @@ own fields first; they usually name the limit that was hit.
 | `IMAGE_TOO_LARGE`          | The snapshot is over `maxImagePixels`                           | Split a page-sized story into components, or reduce very large elements                                                    |
 | `BROWSER_DIMENSION_LIMIT`  | `offendingDimension` is over `maxOffendingDimensionDevicePx`    | Same fixes as `IMAGE_TOO_LARGE`, for the one dimension named                                                               |
 
+## Warnings
+
+A capture's `warnings` say what went wrong without stopping it. A broken
+story can carry them too, and they often name the cause of a timeout.
+
+| Kind                       | What happened                                                 | Where to look                                                                                                               |
+| -------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `RESOURCES_FAILED_TO_LOAD` | The images, fonts or scripts in `urls` had not loaded in time | Search the repository for each path: a file missing from the static directory, a remote host, or an asset too large to load |
+
 ## Timeouts are symptoms
 
 Chromatic allows 15 seconds to render a story and another 15 seconds for its

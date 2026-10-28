@@ -54,6 +54,8 @@ number of story and mode pairs that failed, not the number of stories.
 ### 3. Group them by error kind
 
 For each distinct story, run the capture-error recipe with its `storyId`.
+Use the recipe as written rather than a query of your own: besides the error,
+it reads the capture's `warnings` and `links`, which often name the cause.
 Group the results by `captureError.kind`. One cause usually breaks many
 stories: a missing mock breaks every story that renders that component.
 
@@ -79,6 +81,12 @@ cause in the repository:
 
   If a link is null or does not download, say so, work from the error
   fields, and point the user at the test's `webUrl` for the full report.
+- For any kind, read the capture's `warnings`. A `RESOURCES_FAILED_TO_LOAD`
+  warning lists the URLs of the images, fonts or scripts that never finished
+  loading. Search the repository for each path: a file missing from
+  Storybook's static directory, a package served from a host the capture
+  browser cannot reach, or an asset heavy enough to run the browser out of
+  memory. See [warnings](references/capture-errors.md#warnings).
 - Map a story to its file by searching the repository for the component name
   and the story's title. `component.path` is the story's title in the
   Storybook sidebar, not a file path.
