@@ -1,0 +1,14 @@
+{
+  "name": "chromatic-plugins",
+  "version": "0.5.6",
+  "private": true,
+  "description": "Chromatic's agent plugins. This file exists for release tooling only; the plugins have no dependencies.",
+  "license": "MIT",
+  "scripts": {
+    "changeset": "changeset",
+    "version-packages": "changeset version && node scripts/sync-version.mjs"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "chromatic",
+  "interface": {
+    "displayName": "Chromatic"
+  },
+  "plugins": [
+    {
+      "name": "chromatic",
+      "source": {
+        "source": "local",
+        "path": "./plugins/chromatic"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

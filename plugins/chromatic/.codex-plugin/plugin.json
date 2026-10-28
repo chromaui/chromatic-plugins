@@ -1,0 +1,33 @@
+{
+  "name": "chromatic",
+  "version": "0.5.6",
+  "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else.",
+  "author": {
+    "name": "Chromatic",
+    "email": "support@chromatic.com",
+    "url": "https://www.chromatic.com"
+  },
+  "homepage": "https://www.chromatic.com/docs/mcp",
+  "repository": "https://github.com/chromaui/chromatic-plugins",
+  "license": "MIT",
+  "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Chromatic",
+    "shortDescription": "Review Chromatic builds, fix what they find, and check a branch is ready to merge.",
+    "longDescription": "Connects Codex to the hosted Chromatic MCP server behind one OAuth login. Review the visual changes a build is waiting on, fix stories that failed to capture or keep flaking, turn reviewer comments into changes, fix accessibility violations at the component source, check whether a branch is ready to merge, and ask the Chromatic API anything else about your builds and projects.",
+    "developerName": "Chromatic",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://www.chromatic.com",
+    "privacyPolicyURL": "https://www.chromatic.com/docs/privacy-policy",
+    "termsOfServiceURL": "https://www.chromatic.com/docs/terms-of-service",
+    "defaultPrompt": [
+      "What is the latest Chromatic build on this branch?",
+      "Fix the accessibility violations Chromatic found on this branch.",
+      "Is this branch ready to merge from Chromatic's side?"
+    ],
+    "brandColor": "#FF4785"
+  }
+}

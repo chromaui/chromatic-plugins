@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "chromatic": {
+      "type": "http",
+      "url": "https://mcp.chromatic.com/mcp"
+    }
+  }
+}

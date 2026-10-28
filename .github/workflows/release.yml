@@ -1,0 +1,85 @@
+name: release
+
+# Two jobs, one per half of a release. `version` turns changesets merged to main
+# into a "Version Packages" pull request. Merging that pull request changes the
+# manifest version, and `tag` releases it.
+#
+# The release is tagged from the Claude Code manifest: Claude Code reads it to decide
+# whether installed users update, and never reads git tags. The tag and GitHub
+# release exist for humans, so they are derived from the manifest here rather
+# than maintained by hand.
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  # Opens the Version Packages pull request, or updates it when more changesets
+  # land. It runs `npm run version-packages`, the same script as a local
+  # release, so all four copies of the version move together. When main has no
+  # changesets, it does nothing.
+  version:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+      # The CHANGELOG names the commit that added each changeset, so changesets
+      # reads the whole history rather than fetching more of a shallow clone.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - run: npm ci
+
+      - id: select-mode
+        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+
+      - id: version
+        if: steps.select-mode.outputs.mode == 'version'
+        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          script: npm run version-packages
+          commit-message: Version Packages
+          pr-title: Version Packages
+
+      # See the workflow_dispatch trigger in validate.yml. changesets/action
+      # names the branch changeset-release/<base branch>.
+      - if: steps.version.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run validate.yml --repo "$GITHUB_REPOSITORY" --ref "changeset-release/$GITHUB_REF_NAME"
+
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Create the release for a new manifest version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          version=$(jq -r '.version' plugins/chromatic/.claude-plugin/plugin.json)
+          echo "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "manifest version is not semver: $version"; exit 1; }
+          if gh release view "v$version" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "v$version already released"
+            exit 0
+          fi
+          gh release create "v$version" --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" --title "v$version" --generate-notes

@@ -1,0 +1,6 @@
+# OS and editor junk
+.DS_Store
+Thumbs.db
+
+# Tooling
+node_modules/

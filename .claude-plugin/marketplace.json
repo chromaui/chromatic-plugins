@@ -1,0 +1,25 @@
+{
+  "name": "chromatic",
+  "description": "Chromatic's agent plugins, connecting editors to the hosted Chromatic MCP server.",
+  "owner": {
+    "name": "Chromatic",
+    "email": "support@chromatic.com"
+  },
+  "plugins": [
+    {
+      "name": "chromatic",
+      "displayName": "Chromatic",
+      "source": "./plugins/chromatic",
+      "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else.",
+      "version": "0.5.6",
+      "author": {
+        "name": "Chromatic"
+      },
+      "homepage": "https://www.chromatic.com/docs/mcp",
+      "repository": "https://github.com/chromaui/chromatic-plugins",
+      "license": "MIT",
+      "category": "testing",
+      "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"]
+    }
+  ]
+}

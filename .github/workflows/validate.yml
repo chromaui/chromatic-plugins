@@ -1,0 +1,94 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # The release workflow starts this on the Version Packages branch, because
+  # GitHub does not run pull_request workflows on a pull request the workflow
+  # token opened, and main requires the `plugins` check.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plugins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Cheap structural layer: broken JSON or a marketplace entry pointing at
+      # a directory that does not exist must never reach main, because merging
+      # to main is publishing once this repo is public.
+      - name: Marketplace manifests are well formed
+        run: |
+          set -eu
+          jq empty .claude-plugin/marketplace.json
+          jq -e '.name and (.plugins | length > 0)' .claude-plugin/marketplace.json > /dev/null
+          for source in $(jq -r '.plugins[].source' .claude-plugin/marketplace.json); do
+            test -d "$source" || { echo "marketplace entry points at missing directory: $source"; exit 1; }
+          done
+          jq empty .agents/plugins/marketplace.json
+          jq -e '.plugins | length > 0' .agents/plugins/marketplace.json > /dev/null
+          for path in $(jq -r '.plugins[].source.path' .agents/plugins/marketplace.json); do
+            test -d "$path" || { echo "Codex marketplace entry points at missing directory: $path"; exit 1; }
+          done
+          # Codex reads this file too and does not expand variables in URLs.
+          ! grep -q '\$' plugins/chromatic/.mcp.json || { echo ".mcp.json must carry plain URLs, no variables"; exit 1; }
+
+      # One version, owned by the Claude Code plugin manifest (the release
+      # workflow tags from it). The Codex manifest must agree, and so must the
+      # marketplace entry, which carries a copy because the pre-install
+      # details pane in /plugin reads the version from there, not from
+      # plugin.json.
+      - name: Versions agree
+        run: |
+          set -eu
+          claude_version=$(jq -r '.version' plugins/chromatic/.claude-plugin/plugin.json)
+          codex_version=$(jq -r '.version' plugins/chromatic/.codex-plugin/plugin.json)
+          marketplace_version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
+          package_version=$(jq -r '.version' package.json)
+          test "$claude_version" = "$codex_version" || { echo "plugin versions disagree: $claude_version vs $codex_version"; exit 1; }
+          test "$claude_version" = "$package_version" || { echo "package.json's version does not match plugin.json: $package_version vs $claude_version. Run 'npm run version-packages', which writes all of them"; exit 1; }
+          test "$claude_version" = "$marketplace_version" || { echo "the marketplace entry's version does not match plugin.json: $marketplace_version vs $claude_version"; exit 1; }
+
+      # Codex reads only skills/, so a skill without its Codex manifest is
+      # invisible there while Claude Code still lists it. Every skill ships
+      # both files, or the surfaces drift apart without anyone noticing.
+      - name: Every skill ships its Codex manifest
+        run: |
+          set -eu
+          test ! -d plugins/chromatic/commands || { echo "commands/ is Claude Code only; put slash commands in skills/ so Codex gets them too"; exit 1; }
+          for skill in plugins/chromatic/skills/*/; do
+            test -f "$skill/SKILL.md" || { echo "missing SKILL.md in $skill"; exit 1; }
+            test -f "$skill/agents/openai.yaml" || { echo "missing agents/openai.yaml in $skill"; exit 1; }
+          done
+
+      # Codex loads hooks/hooks.json from a plugin without being told to, and a
+      # plugin with hooks is not listed in its directory. The hooks are for
+      # Claude Code only, which finds them through plugin.json.
+      - name: The hooks stay out of Codex
+        run: |
+          set -eu
+          test ! -e plugins/chromatic/hooks/hooks.json || { echo "hooks/hooks.json is read by Codex; keep the hooks in the file plugin.json names"; exit 1; }
+          jq -e 'has("hooks") | not' plugins/chromatic/.codex-plugin/plugin.json > /dev/null || { echo "the Codex manifest must not declare hooks"; exit 1; }
+          hooks=$(jq -er '.hooks' plugins/chromatic/.claude-plugin/plugin.json)
+          jq -e '.hooks | length > 0' "plugins/chromatic/$hooks" > /dev/null
+
+      # Pinned, so a new release of the CLI cannot change what CI runs. Raise
+      # it by hand when a newer validator is needed.
+      - name: Install the Claude CLI
+        run: npm install -g @anthropic-ai/claude-code@2.1.310
+
+      - name: Validate the marketplace and the plugin
+        run: |
+          claude plugin validate --strict .
+          claude plugin validate --strict plugins/chromatic
+
+      # The run above reads the two manifests and stops there. Skills are only
+      # checked when their directory is named.
+      - name: Validate the skills
+        run: claude plugin validate --strict plugins/chromatic/skills
