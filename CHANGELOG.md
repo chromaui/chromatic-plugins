@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.5.7
+
+### Patch Changes
+
+- 275af51: The plugin has an icon, and links to Chromatic's documentation, support, privacy policy and terms of service, for plugin directory listings.
+
 ## 0.5.6
 
 ### Patch Changes
