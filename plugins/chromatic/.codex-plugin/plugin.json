@@ -1,6 +1,6 @@
 {
   "name": "chromatic",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else.",
   "author": {
     "name": "Chromatic",
