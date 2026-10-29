@@ -47,6 +47,8 @@ query, run it.
    needs: a response over the size limit is refused rather than truncated. A
    mutation goes to `chromatic_mutate` instead, and only for a change the user
    asked for; see [changing a test](references/recipes.md#changing-a-test).
+   When a review is declined because the build was superseded, run the
+   `review-visual-changes` skill on the branch's newest build next.
 4. **Run it** with `chromatic_query`, passing the document as `query` and the
    values as `variables`.
 5. **Page when the answer depends on everything.** While
@@ -82,6 +84,14 @@ A field selected on the interface that only a state has is refused.
 - **Null.** A null `project`, `build` or `storybook` means not found or not
   visible to this login. Say which id you asked about; do not retry with a
   guessed one.
+
+## How Chromatic works
+
+The API holds data, not guidance. For how a feature works or how to set
+something up, such as TurboSnap, modes, delays or font loading, read the docs
+index at https://www.chromatic.com/docs/llms.txt and fetch the page it lists.
+Each page is plain text written for agents, and it is kept current, so prefer
+it to a web search.
 
 See [conventions](references/conventions.md) for id formats, pagination, and
 what the API cannot answer.
