@@ -70,6 +70,25 @@ the file so nobody is asked again.
    is the committed form the repository is expected to carry.
 6. Tell the user the file is ready to commit, and report the id so the tool
    call that needed it can go ahead.
+7. Offer, in the same reply, to add a Chromatic section to the repository's
+   agent instructions. Ask first and write nothing until the user says yes.
+   - The file is `AGENTS.md` at the repository root if it exists, otherwise
+     `CLAUDE.md` if that exists. With neither, offer to create `AGENTS.md`.
+   - If that file already mentions Chromatic, skip the offer.
+   - Show this text in the offer, word for word, so the user sees what would
+     be added and every agent suggests the same lines. Append it at the end
+     of the file when the user agrees:
+
+     ```markdown
+     ## Chromatic
+
+     This repository is tested by Chromatic. After pushing UI changes, check the Chromatic build for that commit, and before saying a branch can merge, check it is ready in Chromatic.
+     If the Chromatic tools are missing, tell the person to sign in to the Chromatic MCP.
+     ```
+
+   Agents load that file in every session, whichever harness they run in and
+   whether or not a skill matches the request. Some harnesses run no plugin
+   hooks, so this is the one reminder that is always there.
 
 This connects the project to the Chromatic MCP, the server that answers for
 builds and accessibility results. The published Storybook's own docs server is
