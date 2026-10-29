@@ -63,7 +63,7 @@ does not tell you enough.
 | `figmaMetadata` and friends                        | `metadata:read`         | No                               |
 | `reviewTest`, `testQuarantine`, `testUnquarantine` | `build:write`           | Yes, with `chromatic_mutate`     |
 | `projectCreate`                                    | `project:write`         | Yes, with `chromatic_mutate`     |
-| `createOAuthClient`                                | `account:write`         | No, the Chromatic MCP refuses it |
+| `createOAuthClient`, `oAuthClientCreate`           | `account:write`         | No, the Chromatic MCP refuses it |
 | Any other mutation                                 | a scope the login lacks | No                               |
 
 Once a root field is allowed, everything nested under it is readable,
