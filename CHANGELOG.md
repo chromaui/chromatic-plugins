@@ -3,6 +3,19 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.6.0
+
+### Minor Changes
+
+- 0a1e583: Connecting a project now offers to add a short Chromatic section to the repository's AGENTS.md or CLAUDE.md, so agents check Chromatic after pushing and before merging.
+- c5dce7b: When Chromatic refuses an accept or deny because a newer build replaced the one you named, the agent now reviews the newer build and asks before acting on it.
+- ee7a5e5: The query skill points how-to questions at the Chromatic docs index instead of a web search.
+- ed16e65: When the Chromatic server is signed out, Claude Code now tells you to run `/mcp` to sign in and carries on with your work.
+
+### Patch Changes
+
+- ed676b1: `check-merge-readiness` no longer calls a fully accepted build "not ready". It used to require `testCount(reviewable: true)` to be 0, but that count includes changes that were already accepted. It now checks that no test is still pending. The branch-build recipe in `query-chromatic` counts pending tests for the same reason.
+
 ## 0.5.7
 
 ### Patch Changes
