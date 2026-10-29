@@ -92,6 +92,11 @@ query BuildCounts($buildId: ID!) {
 }
 ```
 
+`pendingCount` is what still waits for review. `reviewableCount` counts every
+test with a change or a new story, and keeps counting it after it is
+accepted, so it does not drop to 0 when a build is fully reviewed. Never read
+it as "waiting for review".
+
 ## Tests on a build, by status
 
 `resultOrder` puts errors first, then new stories, then changes. Page with
@@ -487,7 +492,7 @@ query BranchBuild($projectId: ID!, $branch: String!) {
         result
         completedAt
         testCount
-        reviewableCount: testCount(reviewable: true)
+        pendingCount: testCount(statuses: [PENDING])
         brokenCount: testCount(statuses: [BROKEN])
         deniedCount: testCount(statuses: [DENIED])
         discussions(first: 50) {
@@ -680,6 +685,10 @@ test's `id` from the tests-by-status, ignored-tests or quarantined-stories
 recipe. When the API declines, for example because the build was superseded,
 the reason comes back in `userErrors` or `errors` rather than as a failure, so
 always select them.
+
+When the reason is that the build was superseded, do not stop at reporting
+it: run the `review-visual-changes` skill on the branch's newest build. It
+shows whether the same change still waits there, and asks before reviewing it.
 
 ### Review a test
 

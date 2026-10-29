@@ -1,6 +1,6 @@
 ---
 name: review-visual-changes
-description: Reviews the visual changes a Chromatic build is waiting on, compares each changed snapshot with the code change on the branch, and shows the person which changes look intended and which look like regressions, with before, after and diff pictures. Use right after you push or open a pull request that changes components, styles, tokens or stories, when a Chromatic build is PENDING, when CI reports visual changes, when the user asks what changed visually or whether Chromatic's changes are expected, before merging a pull request that has a Chromatic check, and before you accept or deny any change in Chromatic, including on a go-ahead such as "ship it". Accepts or denies changes only when the user asks for that by name.
+description: Reviews the visual changes a Chromatic build is waiting on, compares each changed snapshot with the code change on the branch, and shows the person which changes look intended and which look like regressions, with before, after and diff pictures. Use right after you push or open a pull request that changes components, styles, tokens or stories, when a Chromatic build is PENDING, when CI reports visual changes, when the user asks what changed visually or whether Chromatic's changes are expected, before merging a pull request that has a Chromatic check, and before you accept or deny any change in Chromatic, including on a go-ahead such as "ship it", and after Chromatic declines one because a newer build superseded it. Accepts or denies changes only when the user asks for that by name.
 ---
 
 # Review visual changes
@@ -197,3 +197,11 @@ project, so accept or deny only what the person asked for, with
   second try is refused too.
 - Say a change was accepted only when `updatedTests` in the result shows it.
   A reason in `userErrors` means Chromatic declined; report it as written.
+- **If Chromatic declines because the build was superseded**, the person
+  still wants the change reviewed, but the build they named is gone. Find the
+  branch's newest build and run steps 1 to 5 on it, so they see whether the
+  same change is still waiting there. In one reply, say that nothing changed
+  and give Chromatic's reason, show the newer build's review, and ask one
+  question that names the test and the newer build, such as "Deny the Button
+  change on build 58 instead?". Then wait. Their request named the old
+  build, so it does not cover the new one until they say so.
