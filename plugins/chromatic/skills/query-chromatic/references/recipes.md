@@ -91,6 +91,11 @@ query BuildCounts($buildId: ID!) {
 }
 ```
 
+`pendingCount` is what still waits for review. `reviewableCount` counts every
+test with a change or a new story, and keeps counting it after it is
+accepted, so it does not drop to 0 when a build is fully reviewed. Never read
+it as "waiting for review".
+
 ## Tests on a build, by status
 
 `resultOrder` puts errors first, then new stories, then changes. Page with
@@ -431,7 +436,7 @@ query BranchBuild($projectId: ID!, $branch: String!) {
         result
         completedAt
         testCount
-        reviewableCount: testCount(reviewable: true)
+        pendingCount: testCount(statuses: [PENDING])
         brokenCount: testCount(statuses: [BROKEN])
         deniedCount: testCount(statuses: [DENIED])
         discussions(first: 50) {
