@@ -27,6 +27,8 @@ Inside a session:
 
 Then run `/mcp`, choose the Chromatic server, and log in through your browser.
 
+Last, turn on auto-update. Claude Code updates only Anthropic's own marketplaces by default, so without this step you keep the version you installed until you update by hand. Run `/plugin`, open the **Marketplaces** tab, select **chromatic**, and choose **Enable auto-update**.
+
 ### Codex
 
 From a terminal:
@@ -123,10 +125,10 @@ Leave `chromatic_mutate` out. The machine must have logged in once through `/mcp
 
 | | Update | Remove |
 | --- | --- | --- |
-| Claude Code | `claude plugin marketplace update chromatic`, then `claude plugin update chromatic@chromatic` and restart | `claude plugin uninstall chromatic@chromatic` |
+| Claude Code | Automatic once auto-update is on (see [Install](#-install)). To update now: `claude plugin marketplace update chromatic`, then `claude plugin update chromatic@chromatic` and restart | `claude plugin uninstall chromatic@chromatic` |
 | Codex | `codex plugin marketplace upgrade chromatic` | `codex plugin remove chromatic@chromatic` |
 
-If an update does not arrive, remove the plugin and install it again.
+Auto-update downloads a new version after a session starts, and your next session loads it. Run `/reload-plugins` to load it sooner. To see which version you have, run `claude plugin list` and compare it with the [changelog](CHANGELOG.md).
 
 ## 🧰 Troubleshooting
 
