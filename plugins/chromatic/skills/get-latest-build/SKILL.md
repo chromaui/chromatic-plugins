@@ -60,10 +60,13 @@ query PullRequestBuild($projectId: ID!, $number: Int!) {
 
 It finds builds from forks too, where `branch` reads `owner:branch`.
 
-Null means the pull request has no build, the number does not exist, or
-Chromatic cannot ask the git provider, which is always so on Azure DevOps. Say
-that plainly and do not report a build from another branch as this pull
-request's. If you know the pull request's branch, go back to step 3 with it.
+Null means the pull request has no build or the number does not exist. It is
+always null on Azure DevOps. Say that plainly and do not report a build from
+another branch as this pull request's. If you know the pull request's branch,
+go back to step 3 with it.
+
+An error means Chromatic could not ask the git provider, not that the pull
+request is missing. Say so, and use the branch if you know it.
 
 In step 6, compare against the pull request's head commit, not `HEAD`, unless
 its branch is checked out.
