@@ -56,7 +56,9 @@ were this one.
 - `SKIPPED`: no story was affected, so this commit was not tested. Say that,
   not that it passed. Any changes still waiting are on an earlier build.
 - `isSuperseded` true: a newer build exists on this branch and this one can
-  no longer be reviewed. Review the newer build instead.
+  no longer be reviewed. Read `supersededBy` with the `query-chromatic` skill,
+  since `chromatic_get_latest_build` does not return it, and review that build
+  instead, or the branch's newest build when it is null.
 
 ### 2. Read the code change
 
@@ -198,8 +200,9 @@ project, so accept or deny only what the person asked for, with
 - Say a change was accepted only when `updatedTests` in the result shows it.
   A reason in `userErrors` means Chromatic declined; report it as written.
 - **If Chromatic declines because the build was superseded**, the person
-  still wants the change reviewed, but the build they named is gone. Find the
-  branch's newest build and run steps 1 to 5 on it, so they see whether the
+  still wants the change reviewed, but the build they named is gone. Take the
+  build in its `supersededBy`, or the branch's newest build when that is null,
+  and run steps 1 to 5 on it, so they see whether the
   same change is still waiting there. In one reply, say that nothing changed
   and give Chromatic's reason, show the newer build's review, and ask one
   question that names the test and the newer build, such as "Deny the Button

@@ -40,6 +40,10 @@ query BuildByNumber($projectId: ID!, $number: Int!) {
       branch
       commit
       isSuperseded
+      supersededBy {
+        id
+        number
+      }
       isLimited
       error {
         message
@@ -687,8 +691,9 @@ the reason comes back in `userErrors` or `errors` rather than as a failure, so
 always select them.
 
 When the reason is that the build was superseded, do not stop at reporting
-it: run the `review-visual-changes` skill on the branch's newest build. It
-shows whether the same change still waits there, and asks before reviewing it.
+it: run the `review-visual-changes` skill on the build in the old build's
+`supersededBy`, or on the branch's newest build when that is null. It shows
+whether the same change still waits there, and asks before reviewing it.
 
 ### Review a test
 
