@@ -1,6 +1,6 @@
 ---
 name: reduce-snapshot-usage
-description: Shows where a Chromatic project's snapshots go, by component, story, mode and browser, and proposes story parameter changes that cut them without losing coverage the team relies on. Use when the user asks why Chromatic uses so many snapshots, how many snapshots the project uses, how to lower the bill or stay under the plan, why a build was limited to representative stories, or which stories cost the most to test.
+description: Shows where a Chromatic project's snapshots go, by component, story, mode and browser, and proposes story parameter changes that cut them without losing coverage the team relies on. Use when the user asks why Chromatic uses so many snapshots, how many snapshots the project uses, how to lower the bill or stay under the plan, why a build was limited and took no snapshots, or which stories cost the most to test.
 ---
 
 # Reduce snapshot usage
@@ -52,10 +52,10 @@ Use the latest build on the default branch: read the branch from
 `get-latest-build` skill with that branch. For the project id, follow
 `connect-project`.
 
-If the build is limited (`isLimited` is true), the account ran out of
-snapshots and Chromatic captured only one story per component. Say so: that
-build does not show the real spread, so use the newest build on the branch
-that is not limited.
+If the build is limited (`isLimited` is true), the account would pass its
+snapshot quota or has a payment due, and Chromatic took no snapshots. Say so:
+that build shows nothing about the spread, so use the newest build on the
+branch that is not limited.
 
 ### 2. Read the totals
 

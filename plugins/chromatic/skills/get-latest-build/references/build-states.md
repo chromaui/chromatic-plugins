@@ -30,6 +30,7 @@
 
 - `isSuperseded`: a newer build exists on the same branch, and this one can no
   longer be reviewed. Report the newer one instead.
-- `isLimited`: the account passed its snapshot quota, so only one story per
-  component was captured. Results cover part of the Storybook; say so.
+- `isLimited`: UI Tests and UI Review were turned off for the build because
+  the account would pass its snapshot quota or has a payment due. It took no
+  snapshots, so it tested nothing; say so.
 - `error.message`: why the build failed, when it did.

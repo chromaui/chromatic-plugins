@@ -96,9 +96,10 @@ the first row that fails, and give the build's `webUrl`. A `FAILED` build is
 a Chromatic infrastructure error: suggest rerunning it.
 
 `isSuperseded` true means a newer build exists on the branch: rerun step 2
-before reporting. When `isLimited` is true, the account ran out of snapshots
-and only one story per component was tested; say the build is not a full
-check.
+before reporting. When `isLimited` is true, Chromatic turned UI Tests and UI
+Review off for the build because the account would pass its snapshot quota or
+has a payment due, so it took no snapshots; say the build is not a check at
+all.
 
 A `SKIPPED` build tested nothing, because no story was affected. It carries
 the state of the last build that did run, so check that build before calling
