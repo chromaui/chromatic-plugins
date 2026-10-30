@@ -29,7 +29,8 @@
 ## Flags
 
 - `isSuperseded`: a newer build exists on the same branch, and this one can no
-  longer be reviewed. Report the newer one instead.
+  longer be reviewed. Report the newer one instead: `supersededBy` names it,
+  and when that is null, look up the branch's newest build.
 - `isLimited`: UI Tests and UI Review were turned off for the build because
   the account would pass its snapshot quota or has a payment due. It took no
   snapshots, so it tested nothing; say so.
