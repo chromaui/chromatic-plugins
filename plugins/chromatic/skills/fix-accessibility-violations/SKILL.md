@@ -77,10 +77,12 @@ If the result says `truncated`, the scan stopped early; call again with `after`
 set to `nextCursor` before concluding anything about the build.
 
 Fix regressions, not the whole backlog. A violation accepted in a prior review
-is out of scope unless the user asks for it. A story whose violations were all
-accepted earlier and did not move is not in this listing at all. That is not a
-clean story: if the user asks about it, `chromatic_get_accessibility_diff` in
-step 3 still returns its accepted violations.
+is out of scope unless the user asks for it. The listing reports those stories
+apart from `changes`, in `acceptedViolations`, with a count per rule. A build
+with no changes and some accepted violations is not clean, so say they are
+there. The list stops at 50 stories; `acceptedStoryCount` is the full number. If
+the user asks about one of them, `chromatic_get_accessibility_diff` in step 3
+returns its selectors.
 
 Each story carries its review status. A story marked `ACCEPTED` was already
 signed off by a reviewer in this build, regressions included. On a story's
