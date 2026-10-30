@@ -56,8 +56,9 @@ were this one.
 - `SKIPPED`: no story was affected, so this commit was not tested. Say that,
   not that it passed. Any changes still waiting are on an earlier build.
 - `isSuperseded` true: a newer build exists on this branch and this one can
-  no longer be reviewed. Review the build in `supersededBy` instead, or the
-  branch's newest build when that is null.
+  no longer be reviewed. Read `supersededBy` with the `query-chromatic` skill,
+  since `chromatic_get_latest_build` does not return it, and review that build
+  instead, or the branch's newest build when it is null.
 
 ### 2. Read the code change
 
