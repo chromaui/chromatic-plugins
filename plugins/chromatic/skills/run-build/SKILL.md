@@ -67,7 +67,7 @@ builds unattended.
    | 1             | Visual changes are waiting for review       | the `review-visual-changes` skill         |
    | 2             | Stories failed to capture                   | the `fix-broken-stories` skill            |
    | 3             | Chromatic infrastructure error              | Rerun once; report it if it repeats       |
-   | 5             | Limited to representative stories by quota  | Tell the user; results are partial        |
+   | 5             | Limited, so no snapshots were taken         | Tell the user; nothing was tested         |
    | 6             | Cancelled                                   | Report it                                 |
    | 11, 12        | Snapshot quota reached, or payment required | Stop; the account needs attention         |
    | 21 to 23, 105 | Storybook failed to build or start          | Show the CLI's message; fix locally first |

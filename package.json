@@ -1,6 +1,6 @@
 {
   "name": "chromatic-plugins",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "Chromatic's agent plugins. This file exists for release tooling only; the plugins have no dependencies.",
   "license": "MIT",

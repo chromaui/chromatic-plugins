@@ -3,6 +3,13 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.6.1
+
+### Patch Changes
+
+- 893e5c6: The review, broken-story and flaky-story skills now read a capture's warnings, DOM snapshot and Playwright trace, to tell a font or image that failed to load from a real regression and to link the trace viewer.
+- 893e5c6: The skills now say a limited build took no snapshots. They used to say it captured one story per component, which is no longer how Chromatic limits a build.
+
 ## 0.6.0
 
 ### Minor Changes
