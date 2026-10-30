@@ -91,8 +91,15 @@ pending tests in two:
 
 ### 4. Look at each change
 
-For each story that is this branch's, run the visual-change recipe with its
-`storyId`. Each comparison is one browser at one viewport. An image URL is
+Call `chromatic_get_visual_changes` with the build id, and `storyId` to pick
+out a story. It returns the before, after and diff pictures for you to look
+at, cropped to the change where it can, and a caption saying what each one
+shows. Page with `after`. A caption that says a picture was not available
+means you have not seen it.
+
+When that tool is not listed, or the person needs image files, run the
+visual-change recipe with the story's `storyId` for each story that is this
+branch's. Each comparison is one browser at one viewport. An image URL is
 about 1,000 characters, so ask for one story per call; a query for many
 stories with their images fills the conversation, and can be refused as too
 large.
