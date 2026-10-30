@@ -12,6 +12,7 @@ adding a field that is not here.
 - [Tests on a build, by status](#tests-on-a-build-by-status)
 - [Why a story failed to capture](#why-a-story-failed-to-capture)
 - [The visual change on one story](#the-visual-change-on-one-story)
+- [How one story was captured](#how-one-story-was-captured)
 - [Reviewer comments on a build](#reviewer-comments-on-a-build)
 - [Quarantined stories](#quarantined-stories)
 - [Components in a published Storybook](#components-in-a-published-storybook)
@@ -154,7 +155,8 @@ links to the files the capture produced, each null when there is none:
 `errorsJson` is the full error report (none for an interaction failure),
 `domSnapshot` the HTML the story rendered, and `trace` a Playwright trace zip.
 A link does not always download; when it fails, work from the error fields
-and give the user the test's `webUrl`.
+and give the user the test's `webUrl`. `warnings` lists the resources the
+story asked for that did not finish loading.
 
 ```graphql
 query CaptureError($buildId: ID!, $storyId: String!) {
@@ -181,6 +183,12 @@ query CaptureError($buildId: ID!, $storyId: String!) {
                 errorsJson
                 domSnapshot
                 trace
+              }
+              warnings {
+                kind
+                ... on CaptureWarningResourcesFailedToLoad {
+                  urls
+                }
               }
               captureError {
                 kind
@@ -273,6 +281,54 @@ query VisualChange($buildId: ID!, $storyId: String!) {
               }
               focusImage {
                 imageUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## How one story was captured
+
+The files and warnings behind one story's snapshots, for a change the code
+does not explain or a test Chromatic found unstable. `warnings` lists what
+went wrong while capturing that did not stop the capture: today only
+`RESOURCES_FAILED_TO_LOAD`, with the URLs of the images, fonts or scripts that
+had not loaded when the snapshot was taken. `links.domSnapshot` is the HTML the
+story rendered, and `links.trace` a Playwright trace zip; each is null when
+the capture did not produce one. The links are signed and long, so ask for
+one story at a time.
+
+```graphql
+query CaptureFiles($buildId: ID!, $storyId: String!) {
+  build(id: $buildId) {
+    ... on CompletedBuild {
+      tests(storyId: $storyId, first: 10) {
+        nodes {
+          id
+          status
+          webUrl
+          mode {
+            name
+          }
+          visualComparisons {
+            platform {
+              name
+            }
+            headCapture {
+              result
+              warnings {
+                kind
+                ... on CaptureWarningResourcesFailedToLoad {
+                  urls
+                }
+              }
+              links {
+                domSnapshot
+                trace
               }
             }
           }
