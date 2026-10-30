@@ -145,14 +145,12 @@ upstream, such as a branch with an open pull request: commit the fix and push
 it without asking. On the default branch, ask before pushing.
 
 Right after your own push the new build is `IN_PROGRESS`. That is expected,
-not a reason to stop. Keep checking `chromatic_get_latest_build` about every 30
-seconds until the build for your commit finishes. If a plain `sleep` is
-refused, wait another way the client allows, such as a scheduled wake-up or a
-loop that waits on a condition. Do not end the turn and ask the user to tell
-you when the build is done.
+not a reason to stop. Call `chromatic_wait_for_build` with the branch and your
+commit, and call it again for as long as it says to: the tool does the waiting,
+so no `sleep` is needed. Do not end the turn and ask the user to tell you when
+the build is done.
 
-When the build has finished, call `chromatic_get_latest_build` again, then
-`chromatic_get_accessibility_diff` for the same story on the new build id. The
+When the build has finished, call `chromatic_get_accessibility_diff` for the same story on the new build id. The
 fix took when the rule shows no regressions and the selectors you fixed are
 listed as resolved. The story may still appear in
 `chromatic_list_accessibility_changes` with a negative net count: that listing

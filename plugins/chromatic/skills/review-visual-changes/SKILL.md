@@ -45,9 +45,10 @@ up by number with the `query-chromatic` skill.
 
 Compare the build's `commit` with `git rev-parse HEAD`. Right after a push the
 latest build is often the one before it, or still running. In either case
-wait about 30 seconds and ask again, a few times. If you cannot wait, say the
-build is running and stop; do not review an older commit's build as if it
-were this one.
+call `chromatic_wait_for_build` with the branch and the commit, and call it
+again for as long as it says to. When it says to stop, say the build is
+running and stop; do not review an older commit's build as if it were this
+one.
 
 - `PENDING`: continue.
 - `BROKEN`: stories failed to capture; review is blocked until they render.

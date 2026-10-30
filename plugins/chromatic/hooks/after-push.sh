@@ -14,4 +14,4 @@ else
   still_running="If you cannot wait, tell the person the build is running and that you can review it when they ask."
 fi
 
-add_context PostToolUse "If that push went through, Chromatic is about to build this commit. Before you end your turn, call chromatic_get_latest_build for this branch and compare its commit with git rev-parse HEAD. A build for an older commit, or one still running, means wait about 30 seconds and ask again, a few times. Then: PENDING, run the review-visual-changes skill and show the person the changes; BROKEN, run fix-broken-stories; PASSED or ACCEPTED, say so in one line. ${still_running}"
+add_context PostToolUse "If that push went through, Chromatic is about to build this commit. Before you end your turn, call chromatic_wait_for_build with this branch and the output of git rev-parse HEAD. While it says to call again, call again: the tool does the waiting. Then: PENDING, run the review-visual-changes skill and show the person the changes; BROKEN, run fix-broken-stories; PASSED or ACCEPTED, say so in one line. ${still_running}"

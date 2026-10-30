@@ -25,7 +25,8 @@ Answer "what is the state of my branch on Chromatic?" with one tool call.
    progress, say so rather than reading results into it.
 6. Compare the build's `commit` with `git rev-parse HEAD`. If they differ,
    say the build is for an older commit. Right after a push the new build may
-   not exist yet: ask again in about 30 seconds.
+   not exist yet: call `chromatic_wait_for_build` with the branch and the
+   commit, and call it again for as long as it says to.
 
 Explain the status in one sentence, with what to do next, from
 [references/build-states.md](references/build-states.md).
