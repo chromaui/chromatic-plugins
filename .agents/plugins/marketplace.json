@@ -8,7 +8,7 @@
       "name": "chromatic",
       "source": {
         "source": "local",
-        "path": "./plugins/chromatic"
+        "path": "./plugins/chromatic/agent-plugin"
       },
       "policy": {
         "installation": "AVAILABLE",
