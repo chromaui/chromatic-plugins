@@ -114,6 +114,13 @@ jobs:
             size=$(file -b "$package/$icon" | grep -oE '[0-9]+ x [0-9]+')
             test "${size% x *}" = "${size#* x }" || { echo "$field must be square, got $size"; exit 1; }
           done
+          # MCP review needs exactly five positive cases, each naming its tools
+          # and expected result, and three negative ones. Reviewer access goes
+          # through the dashboard; the upload refuses it in the package.
+          review='.extensions["com.openai"].review'
+          jq -e "$review.test_cases | (.positive | length) == 5 and (.negative | length) == 3" "$manifest" > /dev/null || { echo "review needs exactly 5 positive and 3 negative test cases"; exit 1; }
+          jq -e "$review.test_cases | all(.positive[]; .description and .prompt and .tools_triggered and .expected_behavior) and all(.negative[]; .description and .prompt)" "$manifest" > /dev/null || { echo "every test case needs a description and prompt, and positive ones tools_triggered and expected_behavior"; exit 1; }
+          jq -e "$review | (has(\"test_credentials\") or has(\"reviewer_instructions\")) | not" "$manifest" > /dev/null || { echo "reviewer credentials and instructions go in the dashboard, never the package"; exit 1; }
 
       # Codex reads only skills/, so a skill without its Codex manifest is
       # invisible there while Claude Code still lists it. Every skill ships
