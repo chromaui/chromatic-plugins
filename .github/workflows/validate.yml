@@ -36,6 +36,11 @@ jobs:
           for path in $(jq -r '.plugins[].source.path' .agents/plugins/marketplace.json); do
             test -d "$path" || { echo "Codex marketplace entry points at missing directory: $path"; exit 1; }
           done
+          jq empty .cursor-plugin/marketplace.json
+          jq -e '.name and .owner.name and (.plugins | length > 0)' .cursor-plugin/marketplace.json > /dev/null
+          for source in $(jq -r '.plugins[].source' .cursor-plugin/marketplace.json); do
+            test -f "$source/.cursor-plugin/plugin.json" || { echo "Cursor marketplace entry has no .cursor-plugin/plugin.json: $source"; exit 1; }
+          done
 
       # One version, owned by the Claude Code plugin manifest (the release
       # workflow tags from it). The package manifest must agree, and so must
@@ -47,9 +52,11 @@ jobs:
           set -eu
           claude_version=$(jq -r '.version' plugins/chromatic/.claude-plugin/plugin.json)
           agent_version=$(jq -r '.version' plugins/chromatic/agent-plugin/plugin.json)
+          cursor_version=$(jq -r '.version' plugins/chromatic/agent-plugin/.cursor-plugin/plugin.json)
           marketplace_version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
           package_version=$(jq -r '.version' package.json)
           test "$claude_version" = "$agent_version" || { echo "plugin versions disagree: $claude_version vs $agent_version"; exit 1; }
+          test "$claude_version" = "$cursor_version" || { echo "the Cursor manifest's version does not match plugin.json: $cursor_version vs $claude_version"; exit 1; }
           test "$claude_version" = "$package_version" || { echo "package.json's version does not match plugin.json: $package_version vs $claude_version. Run 'npm run version-packages', which writes all of them"; exit 1; }
           test "$claude_version" = "$marketplace_version" || { echo "the marketplace entry's version does not match plugin.json: $marketplace_version vs $claude_version"; exit 1; }
 
@@ -77,6 +84,27 @@ jobs:
           jq -e '.skills == "./agent-plugin/skills/"' "$claude/.claude-plugin/plugin.json" > /dev/null || { echo "the Claude Code manifest must read its skills from the package"; exit 1; }
           test ! -e "$claude/skills" || { echo "skills belong in $package/skills, which both agents read"; exit 1; }
           test ! -e "$claude/.codex-plugin" || { echo "Codex reads $package/plugin.json; a .codex-plugin manifest would be ignored and drift"; exit 1; }
+
+      # Cursor reads the package too, but it cannot sign in from the shared
+      # mcp.json: it registers dynamically or uses a static client ID, and
+      # Chromatic offers no dynamic registration. The standard's mcp.json has
+      # no auth field, and an invalid one turns off MCP in every agent, so
+      # Cursor gets its own MCP config beside its manifest. Other agents only
+      # read plugin.json, skills/ and mcp.json, so they never see it.
+      - name: Cursor signs in with the static client
+        run: |
+          set -eu
+          package=plugins/chromatic/agent-plugin
+          cursor="$package/.cursor-plugin"
+          mcp=$(jq -er '.mcpServers' "$cursor/plugin.json")
+          test "$mcp" = "./.cursor-plugin/mcp.json" || { echo "the Cursor manifest must read its MCP config from .cursor-plugin/mcp.json, not the shared mcp.json"; exit 1; }
+          jq -e 'has("skills") | not' "$cursor/plugin.json" > /dev/null || { echo "Cursor finds the skills in skills/ on its own; a skills path would replace that"; exit 1; }
+          package_url=$(jq -er '.mcpServers.chromatic.url' "$package/mcp.json")
+          cursor_url=$(jq -er '.mcpServers.chromatic.url' "$cursor/mcp.json")
+          test "$package_url" = "$cursor_url" || { echo "the MCP URLs disagree: $package_url vs $cursor_url"; exit 1; }
+          jq -e '.mcpServers.chromatic.auth.CLIENT_ID | test("^[0-9a-f]{32}$")' "$cursor/mcp.json" > /dev/null || { echo "the Cursor MCP config needs auth.CLIENT_ID, or Cursor cannot sign in"; exit 1; }
+          jq -e '.mcpServers.chromatic.auth | has("CLIENT_SECRET") | not' "$cursor/mcp.json" > /dev/null || { echo "the client is public; never ship a client secret"; exit 1; }
+          jq -e '[.mcpServers[] | has("auth")] | any | not' "$package/mcp.json" > /dev/null || { echo "the shared mcp.json must stay within the Agent Plugins schema, which has no auth field"; exit 1; }
 
       # OpenAI's directory refuses a package with lifecycle hooks or app
       # references. Codex also loads hooks/hooks.json from a package without

@@ -4,7 +4,7 @@
 
 **Chromatic for your coding agent.**
 
-One install connects Claude Code or Codex to your Chromatic projects, so your agent can review the visual changes on your branch, fix broken stories and accessibility violations, and tell you whether the branch is ready to merge.
+One install connects Claude Code, Codex or Cursor to your Chromatic projects, so your agent can review the visual changes on your branch, fix broken stories and accessibility violations, and tell you whether the branch is ready to merge.
 
 📚 [Documentation](https://www.chromatic.com/docs/mcp) ∙ 💬 [Support](https://www.chromatic.com/docs/support) ∙ 📝 [Changelog](CHANGELOG.md) ∙ 📄 [MIT License](LICENSE)
 
@@ -14,7 +14,7 @@ One install connects Claude Code or Codex to your Chromatic projects, so your ag
 
 ## ⚡ Install
 
-You need a [Chromatic](https://www.chromatic.com) account with at least one project, and [Claude Code](https://code.claude.com/docs) or [Codex](https://developers.openai.com/codex).
+You need a [Chromatic](https://www.chromatic.com) account with at least one project, and [Claude Code](https://code.claude.com/docs), [Codex](https://developers.openai.com/codex) or [Cursor](https://cursor.com).
 
 ### Claude Code
 
@@ -38,6 +38,10 @@ codex plugin marketplace add chromaui/chromatic-plugins
 codex plugin add chromatic@chromatic
 codex mcp login chromatic
 ```
+
+### Cursor
+
+On a Teams or Enterprise plan, an admin adds the plugin once: open the team marketplace settings, choose **Import from Repo**, and paste `https://github.com/chromaui/chromatic-plugins`. Each person then installs **chromatic** from **Customize** and signs in to Chromatic in the browser the first time the agent calls a tool.
 
 <details>
 <summary><strong>Claude Desktop and claude.ai</strong></summary>
