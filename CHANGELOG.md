@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.7.0
+
+### Minor Changes
+
+- 0427f47: Codex now installs the plugin from `plugins/chromatic/agent-plugin`, a package in the open [Agent Plugins](https://agent-plugins.org) format that other agents can install too. It holds the skills, the MCP server and the icon, and no hooks. Claude Code reads the same skills from it and keeps its hooks beside it. Nothing changes for Claude Code users; Codex users get the new location with `codex plugin marketplace upgrade chromatic`.
+
 ## 0.6.1
 
 ### Patch Changes
