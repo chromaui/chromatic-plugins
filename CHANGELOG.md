@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.8.0
+
+### Minor Changes
+
+- a50c9b0: Cursor can now install the plugin and sign in. Cursor reads the same skills as Codex from `plugins/chromatic/agent-plugin`, and its own manifest gives it the client ID it needs to log in to Chromatic. Nothing changes for Claude Code or Codex.
+
 ## 0.7.0
 
 ### Minor Changes
