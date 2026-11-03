@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "chromatic": {
+      "type": "http",
+      "url": "https://mcp.chromatic.com/mcp",
+      "auth": {
+        "CLIENT_ID": "cdf3737dff9d485485968e50b63fd8b4"
+      }
+    }
+  }
+}
