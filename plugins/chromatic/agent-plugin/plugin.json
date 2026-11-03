@@ -65,7 +65,7 @@
               "description": "Change review state only after asking. A request to accept changes is answered with one question that names the build and the tests, and nothing changes until the person says yes. Answer no to keep the sample data as it is for later reviews.",
               "prompt": "Accept the visual changes on the latest review-demo build in my Review Demo project.",
               "tools_triggered": "chromatic_get_latest_build, chromatic_query, chromatic_mutate (only after the person confirms)",
-              "expected_behavior": "Before changing anything, asks one question naming the build and the two tests it would accept. If the answer is no, it calls no mutation and says nothing changed. If the answer is yes, it accepts those two tests only and reports what changed."
+              "expected_behavior": "Changes nothing at first. Asks one question that names the build, the test it would accept because it matches the brand refresh with no regression (Button / Secondary), and the tests it would leave and why (new contrast, alt text, form label and button name violations on Button / Primary, ProductCard, SignupForm and IconButton). If the answer is no, it calls no mutation and says nothing changed. If the answer is yes, it accepts only the tests it named and reports what changed."
             }
           ],
           "negative": [
