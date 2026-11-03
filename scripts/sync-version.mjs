@@ -7,7 +7,7 @@ const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
 
 const targets = [
   ['plugins/chromatic/.claude-plugin/plugin.json', (manifest) => (manifest.version = version)],
-  ['plugins/chromatic/.codex-plugin/plugin.json', (manifest) => (manifest.version = version)],
+  ['plugins/chromatic/agent-plugin/plugin.json', (manifest) => (manifest.version = version)],
   ['.claude-plugin/marketplace.json', (manifest) => (manifest.plugins[0].version = version)],
 ];
 

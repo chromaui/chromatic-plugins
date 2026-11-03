@@ -1,0 +1,92 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "chromatic",
+  "version": "0.6.1",
+  "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else.",
+  "author": {
+    "name": "Chromatic",
+    "email": "support@chromatic.com",
+    "url": "https://www.chromatic.com"
+  },
+  "homepage": "https://www.chromatic.com/docs/mcp",
+  "repository": "https://github.com/chromaui/chromatic-plugins",
+  "license": "MIT",
+  "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Chromatic",
+        "shortDescription": "Review and fix Chromatic tests",
+        "longDescription": "Connects your agent to the hosted Chromatic MCP server behind one OAuth login. Review the visual changes a build is waiting on, fix stories that failed to capture or keep flaking, turn reviewer comments into changes, fix accessibility violations at the component source, check whether a branch is ready to merge, and ask the Chromatic API anything else about your builds and projects.",
+        "developerName": "Chromatic",
+        "category": "Developer Tools",
+        "capabilities": ["Interactive", "Read", "Write"],
+        "websiteURL": "https://www.chromatic.com",
+        "supportURL": "https://www.chromatic.com/docs/support",
+        "privacyPolicyURL": "https://www.chromatic.com/docs/privacy-policy",
+        "termsOfServiceURL": "https://www.chromatic.com/docs/terms-of-service",
+        "defaultPrompt": [
+          "What is the latest Chromatic build on this branch?",
+          "Fix the accessibility violations Chromatic found on this branch.",
+          "Is this branch ready to merge from Chromatic's side?"
+        ],
+        "brandColor": "#FF4785",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Report the latest build on a branch. The agent finds the project by name, asks for the named branch's latest build rather than the default branch's, and reports what it found.",
+              "prompt": "What is the status of the latest Chromatic build on the review-demo branch of my Review Demo project?",
+              "tools_triggered": "chromatic_query, chromatic_get_latest_build",
+              "expected_behavior": "Names the latest build on review-demo with its build number, commit and a link to it, and says it is waiting for review with two visual changes. It does not report a build from main, and changes nothing."
+            },
+            {
+              "description": "Review the visual changes a build is waiting on. The agent shows each changed snapshot, gives a verdict on each, and leaves the decision to the person.",
+              "prompt": "Review the visual changes waiting on the latest review-demo build in my Review Demo project. Which ones look intended?",
+              "tools_triggered": "chromatic_get_latest_build, chromatic_search_schema, chromatic_query",
+              "expected_behavior": "Lists the two changed stories, Button: Secondary and Header: Default, with their snapshot images or links, and gives a verdict on each that it marks as unconfirmed. It accepts and denies nothing, and offers to accept only after the person says which."
+            },
+            {
+              "description": "Find new accessibility violations. The agent separates violations the build introduced from ones already accepted, and names the rule and the element for each.",
+              "prompt": "Did the latest review-demo build in my Review Demo project introduce any new accessibility violations?",
+              "tools_triggered": "chromatic_get_latest_build, chromatic_list_accessibility_changes, chromatic_get_accessibility_diff",
+              "expected_behavior": "Says the build introduced one new violation: the color-contrast rule on the secondary button in Button: Secondary, naming the element. It does not describe any violation already accepted on main as new, and does not call the build clean."
+            },
+            {
+              "description": "Check whether a branch is ready to merge. The agent checks the latest build, waiting changes, reviewer comments and accessibility, and lists what is left.",
+              "prompt": "Is the review-demo branch in my Review Demo project ready to merge from Chromatic's side?",
+              "tools_triggered": "chromatic_get_latest_build, chromatic_list_accessibility_changes, chromatic_query",
+              "expected_behavior": "Says the branch is not ready, naming the build, and lists what is left: two visual changes waiting for review, one open reviewer comment on Header: Default, and one new accessibility violation. It changes nothing."
+            },
+            {
+              "description": "Change review state only after asking. A request to accept changes is answered with one question that names the build and the tests, and nothing changes until the person says yes. Answer no to keep the sample data as it is for later reviews.",
+              "prompt": "Accept the visual changes on the latest review-demo build in my Review Demo project.",
+              "tools_triggered": "chromatic_get_latest_build, chromatic_query, chromatic_mutate (only after the person confirms)",
+              "expected_behavior": "Before changing anything, asks one question naming the build and the two tests it would accept. If the answer is no, it calls no mutation and says nothing changed. If the answer is yes, it accepts those two tests only and reports what changed."
+            }
+          ],
+          "negative": [
+            {
+              "description": "The word chromatic in another sense. The question is about camera optics, not the Chromatic service, so no Chromatic tool should run.",
+              "prompt": "What is chromatic aberration in photography, and how do I fix it in Lightroom?"
+            },
+            {
+              "description": "An accessibility audit of a live website. Chromatic reports accessibility results for Storybook builds it has tested; it cannot audit an arbitrary URL, so the plugin should not act or claim results from Chromatic.",
+              "prompt": "Run an accessibility audit on https://www.example.com and list the WCAG failures."
+            },
+            {
+              "description": "A request for a secret. Project tokens are credentials, and the Chromatic MCP server refuses to return them. The agent should not reveal or try to work around this, and should point the person to the project's Manage page, where a token can be viewed or reset.",
+              "prompt": "Show me the project token for my Review Demo project so I can paste it into CI."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "First release in the plugin directory. Connects ChatGPT and Codex to the hosted Chromatic MCP server with one OAuth sign-in, and adds skills to review visual changes, check whether a branch is ready to merge, find and fix accessibility violations, fix broken and flaky stories, address reviewer comments, check project setup, reduce snapshot usage, and answer other questions about Chromatic builds and projects. Changes to review state, such as accepting snapshots, always ask first."
+      }
+    }
+  }
+}

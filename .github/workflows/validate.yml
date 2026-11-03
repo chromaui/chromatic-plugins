@@ -36,24 +36,91 @@ jobs:
           for path in $(jq -r '.plugins[].source.path' .agents/plugins/marketplace.json); do
             test -d "$path" || { echo "Codex marketplace entry points at missing directory: $path"; exit 1; }
           done
-          # Codex reads this file too and does not expand variables in URLs.
-          ! grep -q '\$' plugins/chromatic/.mcp.json || { echo ".mcp.json must carry plain URLs, no variables"; exit 1; }
 
       # One version, owned by the Claude Code plugin manifest (the release
-      # workflow tags from it). The Codex manifest must agree, and so must the
-      # marketplace entry, which carries a copy because the pre-install
+      # workflow tags from it). The package manifest must agree, and so must
+      # the marketplace entry, which carries a copy because the pre-install
       # details pane in /plugin reads the version from there, not from
       # plugin.json.
       - name: Versions agree
         run: |
           set -eu
           claude_version=$(jq -r '.version' plugins/chromatic/.claude-plugin/plugin.json)
-          codex_version=$(jq -r '.version' plugins/chromatic/.codex-plugin/plugin.json)
+          agent_version=$(jq -r '.version' plugins/chromatic/agent-plugin/plugin.json)
           marketplace_version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
           package_version=$(jq -r '.version' package.json)
-          test "$claude_version" = "$codex_version" || { echo "plugin versions disagree: $claude_version vs $codex_version"; exit 1; }
+          test "$claude_version" = "$agent_version" || { echo "plugin versions disagree: $claude_version vs $agent_version"; exit 1; }
           test "$claude_version" = "$package_version" || { echo "package.json's version does not match plugin.json: $package_version vs $claude_version. Run 'npm run version-packages', which writes all of them"; exit 1; }
           test "$claude_version" = "$marketplace_version" || { echo "the marketplace entry's version does not match plugin.json: $marketplace_version vs $claude_version"; exit 1; }
+
+      # One plugin, two folders. plugins/chromatic is the Claude Code plugin,
+      # the folder Anthropic's directory follows, which cannot move.
+      # plugins/chromatic/agent-plugin is an Agent Plugins 1.0 package
+      # (https://agent-plugins.org): Codex installs it, OpenAI's directory takes
+      # it as a ZIP, and other agents that read the standard can install it too.
+      # Claude Code reads its skills from there through plugin.json, and keeps
+      # the hooks beside it, because OpenAI's directory refuses any package
+      # that contains hooks.
+      - name: The two folders agree
+        run: |
+          set -eu
+          claude=plugins/chromatic
+          package=plugins/chromatic/agent-plugin
+          # Each side keeps its own MCP config: Claude Code and Anthropic's
+          # directory want type "http", the standard allows only
+          # "streamable-http". The server must be the same one, with a plain
+          # URL, because Codex does not expand variables.
+          claude_url=$(jq -er '.mcpServers.chromatic.url' "$claude/.mcp.json")
+          package_url=$(jq -er '.mcpServers.chromatic | select(.type == "streamable-http") | .url' "$package/mcp.json")
+          test "$claude_url" = "$package_url" || { echo "the MCP URLs disagree: $claude_url vs $package_url"; exit 1; }
+          jq -se 'map(.mcpServers[].url | contains("$")) | any | not' "$claude/.mcp.json" "$package/mcp.json" > /dev/null || { echo "MCP configs must carry plain URLs, no variables"; exit 1; }
+          jq -e '.skills == "./agent-plugin/skills/"' "$claude/.claude-plugin/plugin.json" > /dev/null || { echo "the Claude Code manifest must read its skills from the package"; exit 1; }
+          test ! -e "$claude/skills" || { echo "skills belong in $package/skills, which both agents read"; exit 1; }
+          test ! -e "$claude/.codex-plugin" || { echo "Codex reads $package/plugin.json; a .codex-plugin manifest would be ignored and drift"; exit 1; }
+
+      # OpenAI's directory refuses a package with lifecycle hooks or app
+      # references. Codex also loads hooks/hooks.json from a package without
+      # being told to. The hooks are for Claude Code only, which finds them
+      # through its own plugin.json.
+      - name: The package carries no hooks
+        run: |
+          set -eu
+          package=plugins/chromatic/agent-plugin
+          found=$(find "$package" -iname '*hook*' -print)
+          test -z "$found" || { echo "hooks belong in plugins/chromatic/hooks, outside the package: $found"; exit 1; }
+          jq -e '.extensions["com.openai"] | (has("hooks") or has("apps")) | not' "$package/plugin.json" > /dev/null || { echo "the package manifest must not declare hooks or apps"; exit 1; }
+          test ! -e "$package/.app.json" || { echo "OpenAI's directory refuses a package with app references"; exit 1; }
+          hooks=$(jq -er '.hooks' plugins/chromatic/.claude-plugin/plugin.json)
+          jq -e '.hooks | length > 0' "plugins/chromatic/$hooks" > /dev/null
+
+      # The limits OpenAI's upload checks, so a listing that would be refused
+      # fails here first. Source: developers.openai.com/plugins/deploy/submission.
+      - name: The package meets OpenAI's listing rules
+        run: |
+          set -eu
+          package=plugins/chromatic/agent-plugin
+          manifest="$package/plugin.json"
+          jq -e '."$schema" == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"' "$manifest" > /dev/null || { echo "plugin.json must name the Agent Plugins 1.0.0 schema"; exit 1; }
+          jq -e '.name | test("^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$") and (length <= 64)' "$manifest" > /dev/null || { echo "name must be lowercase letters, digits and hyphens"; exit 1; }
+          jq -e '(.description | length) <= 1024' "$manifest" > /dev/null || { echo "description is over 1024 characters"; exit 1; }
+          ui='.extensions["com.openai"].interface'
+          jq -e "$ui | (.displayName | length) <= 30 and (.shortDescription | length) <= 30 and (.longDescription | length) <= 4000" "$manifest" > /dev/null || { echo "displayName and shortDescription must be 30 characters or fewer, longDescription 4000"; exit 1; }
+          for field in websiteURL supportURL privacyPolicyURL termsOfServiceURL; do
+            jq -er "$ui.$field | select(startswith(\"https://\"))" "$manifest" > /dev/null || { echo "$field must be an https URL"; exit 1; }
+          done
+          for field in logo composerIcon; do
+            icon=$(jq -er "$ui.$field" "$manifest") || { echo "$field is required"; exit 1; }
+            test -f "$package/$icon" || { echo "$field points at a missing file: $icon"; exit 1; }
+            size=$(file -b "$package/$icon" | grep -oE '[0-9]+ x [0-9]+')
+            test "${size% x *}" = "${size#* x }" || { echo "$field must be square, got $size"; exit 1; }
+          done
+          # MCP review needs exactly five positive cases, each naming its tools
+          # and expected result, and three negative ones. Reviewer access goes
+          # through the dashboard; the upload refuses it in the package.
+          review='.extensions["com.openai"].review'
+          jq -e "$review.test_cases | (.positive | length) == 5 and (.negative | length) == 3" "$manifest" > /dev/null || { echo "review needs exactly 5 positive and 3 negative test cases"; exit 1; }
+          jq -e "$review.test_cases | all(.positive[]; .description and .prompt and .tools_triggered and .expected_behavior) and all(.negative[]; .description and .prompt)" "$manifest" > /dev/null || { echo "every test case needs a description and prompt, and positive ones tools_triggered and expected_behavior"; exit 1; }
+          jq -e "$review | (has(\"test_credentials\") or has(\"reviewer_instructions\")) | not" "$manifest" > /dev/null || { echo "reviewer credentials and instructions go in the dashboard, never the package"; exit 1; }
 
       # Codex reads only skills/, so a skill without its Codex manifest is
       # invisible there while Claude Code still lists it. Every skill ships
@@ -62,21 +129,10 @@ jobs:
         run: |
           set -eu
           test ! -d plugins/chromatic/commands || { echo "commands/ is Claude Code only; put slash commands in skills/ so Codex gets them too"; exit 1; }
-          for skill in plugins/chromatic/skills/*/; do
+          for skill in plugins/chromatic/agent-plugin/skills/*/; do
             test -f "$skill/SKILL.md" || { echo "missing SKILL.md in $skill"; exit 1; }
             test -f "$skill/agents/openai.yaml" || { echo "missing agents/openai.yaml in $skill"; exit 1; }
           done
-
-      # Codex loads hooks/hooks.json from a plugin without being told to, and a
-      # plugin with hooks is not listed in its directory. The hooks are for
-      # Claude Code only, which finds them through plugin.json.
-      - name: The hooks stay out of Codex
-        run: |
-          set -eu
-          test ! -e plugins/chromatic/hooks/hooks.json || { echo "hooks/hooks.json is read by Codex; keep the hooks in the file plugin.json names"; exit 1; }
-          jq -e 'has("hooks") | not' plugins/chromatic/.codex-plugin/plugin.json > /dev/null || { echo "the Codex manifest must not declare hooks"; exit 1; }
-          hooks=$(jq -er '.hooks' plugins/chromatic/.claude-plugin/plugin.json)
-          jq -e '.hooks | length > 0' "plugins/chromatic/$hooks" > /dev/null
 
       # Pinned, so a new release of the CLI cannot change what CI runs. Raise
       # it by hand when a newer validator is needed.
@@ -91,4 +147,4 @@ jobs:
       # The run above reads the two manifests and stops there. Skills are only
       # checked when their directory is named.
       - name: Validate the skills
-        run: claude plugin validate --strict plugins/chromatic/skills
+        run: claude plugin validate --strict plugins/chromatic/agent-plugin/skills
