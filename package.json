@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "changeset": "changeset",
-    "version-packages": "changeset version && node scripts/sync-version.mjs"
+    "version-packages": "changeset version && node scripts/sync-version.mjs",
+    "openai-zip": "node scripts/build-openai-zip.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3"

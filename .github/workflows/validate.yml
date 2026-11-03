@@ -90,6 +90,10 @@ jobs:
           test -z "$found" || { echo "hooks belong in plugins/chromatic/hooks, outside the package: $found"; exit 1; }
           jq -e '.extensions["com.openai"] | (has("hooks") or has("apps")) | not' "$package/plugin.json" > /dev/null || { echo "the package manifest must not declare hooks or apps"; exit 1; }
           test ! -e "$package/.app.json" || { echo "OpenAI's directory refuses a package with app references"; exit 1; }
+          # Codex 0.166 drops an MCP server whose entry has an `extensions` key, even an
+          # empty one. OpenAI's sign-in settings go into the submission ZIP instead;
+          # see scripts/build-openai-zip.mjs.
+          jq -e '[.mcpServers[] | has("extensions")] | any | not' "$package/mcp.json" > /dev/null || { echo "the package mcp.json must not carry extensions: Codex drops the server"; exit 1; }
           hooks=$(jq -er '.hooks' plugins/chromatic/.claude-plugin/plugin.json)
           jq -e '.hooks | length > 0' "plugins/chromatic/$hooks" > /dev/null
 
