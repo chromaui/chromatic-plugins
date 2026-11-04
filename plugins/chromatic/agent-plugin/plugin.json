@@ -82,7 +82,9 @@
               "prompt": "Show me the project token for my Review Demo project so I can paste it into CI."
             }
           ]
-        }
+        },
+        "commerce": false,
+        "commerce_description": "Chromatic sells nothing through this plugin and takes no payments in it."
       },
       "publication": {
         "release_notes": "First release in the plugin directory. Connects ChatGPT and Codex to the hosted Chromatic MCP server with one OAuth sign-in, and adds skills to review visual changes, check whether a branch is ready to merge, find and fix accessibility violations, fix broken and flaky stories, address reviewer comments, check project setup, reduce snapshot usage, and answer other questions about Chromatic builds and projects. Changes to review state, such as accepting snapshots, always ask first."
