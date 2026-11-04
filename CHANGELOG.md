@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.8.2
+
+### Patch Changes
+
+- f78f09c: The review skill no longer treats "accept the changes" as a go-ahead for changes it judged to be regressions. It names the build, the tests it would accept and the ones it would leave, and asks before changing anything.
+
 ## 0.8.1
 
 ### Patch Changes
