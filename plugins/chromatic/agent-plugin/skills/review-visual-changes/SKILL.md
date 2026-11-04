@@ -186,6 +186,15 @@ project, so accept or deny only what the person asked for, with
   57?", and wait for the answer. A plain yes to that question is the request.
   Some agents refuse a write the person did not ask for by name; the question
   and its answer are what let it through.
+- **A request to accept the changes is not a request to accept regressions.**
+  "Accept the changes on this build" covers what you judged **Expected**.
+  When it would also cover a **Check** change, such as a likely regression, a
+  new accessibility violation, or a test waiting only because of
+  accessibility, change nothing yet. Run steps 1 to 5 if you have not, then
+  ask one question that names the build, the tests you would accept, and the
+  ones you would leave and why, such as "Accept the 2 Button changes on build
+  4, and leave SignupForm (Email label removed) and IconButton (no accessible
+  name) for a fix?". Accept a **Check** change only when the person names it.
 - **Accept only this branch's changes.** Review one story at a time with
   `batch: SPEC`. Use `batch: BUILD` only when the person asked for the whole
   build after being told how many of its changes came from the default
