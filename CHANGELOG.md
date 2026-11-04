@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.8.1
+
+### Patch Changes
+
+- 92cea02: The OpenAI listing declares that the plugin sells nothing.
+
 ## 0.8.0
 
 ### Minor Changes
