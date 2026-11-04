@@ -1,0 +1,16 @@
+{
+  "name": "chromatic",
+  "displayName": "Chromatic",
+  "version": "0.8.0",
+  "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else.",
+  "author": {
+    "name": "Chromatic",
+    "email": "support@chromatic.com"
+  },
+  "homepage": "https://www.chromatic.com/docs/mcp",
+  "repository": "https://github.com/chromaui/chromatic-plugins",
+  "license": "MIT",
+  "logo": "assets/icon.png",
+  "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"],
+  "mcpServers": "./.cursor-plugin/mcp.json"
+}
