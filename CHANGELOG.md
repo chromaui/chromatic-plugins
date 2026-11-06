@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.9.0
+
+### Minor Changes
+
+- b1b8cc4: The Claude Code hooks are now prompt hooks, which the Claude plugin directory accepts from any organization. After a push or a new pull request, a hook still tells the agent to check the Chromatic build. The session start reminder and the background build watcher are gone, because prompt hooks cannot run on session start or wait in the background.
+
 ## 0.8.2
 
 ### Patch Changes
