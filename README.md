@@ -84,7 +84,7 @@ Ask your agent "what time is it on the Chromatic server?". If it answers, you ar
 | `check-project-setup` | Checks that this repository is connected to the right Chromatic project |
 | `connect-project` | Finds your Chromatic project id and saves it to `chromatic.config.json` |
 
-**Three hooks, in Claude Code only.** In a repository with a `chromatic.config.json`, they remind your agent to check Chromatic when a session starts and after it pushes or opens a pull request. One waits in the background for the build and wakes your agent when it finishes. The hooks add notes for your agent and nothing else: they start no build and change nothing. Codex gets no hooks from this plugin.
+**Two hooks, in Claude Code only.** After your agent pushes or opens a pull request, they remind it to check the Chromatic build for that commit. Each is a prompt hook: a short model call that reads the command and its result and decides whether a push or a new pull request happened. They add a note for your agent and nothing else: they start no build and change nothing. Codex gets no hooks from this plugin.
 
 ## 💬 Use it
 
@@ -122,7 +122,7 @@ Leave `chromatic_mutate` out. The machine must have logged in once through `/mcp
 
 - **It acts as you.** You log in once per agent, in your browser, with your Chromatic account. There is no API key to create and no token to paste. Your agent sees only the projects your account can see, and can do only what your account can do.
 - **It reads, and changes only when asked.** It reads builds, tests, accessibility results, published Storybooks and your account. The one change it can make is to accept, deny, quarantine or unquarantine a test, and the skills ask you first unless you named the tests.
-- **The hooks stay on your machine.** They read your local git repository. The build watcher also reads Chromatic's status on your commit from GitHub, through the `gh` CLI you are already signed in to. They send nothing to Chromatic.
+- **The hooks send nothing to Chromatic.** They run only after a `git push` or `gh pr create`, and pass that command and its output to the model Claude Code already uses for background work.
 - **Usage records are small.** For each tool call, Chromatic records the tool's name, whether it worked, how long it took and the project it named. They do not include your agent's questions or the answers. See the [privacy policy](https://www.chromatic.com/docs/privacy-policy).
 
 ## 🔄 Update or remove
