@@ -112,6 +112,8 @@ large.
   show it.
 - If you cannot fetch or view images, say so at the top of the report and
   judge from the code change alone, marking every verdict as unconfirmed.
+  Still check how each change the code does not explain was captured, as
+  below: that is a query, not a picture.
 - Decide:
   - **Expected**: the change is in a component the branch touched, and it
     matches what the code change does.
@@ -119,10 +121,9 @@ large.
     shows text, layout or color moving where the code did not ask for it.
   - **Unclear**: say what you could not tell, and why.
 
-For every change the code does not explain, check how it was captured
-before you report it, even when you could not view its pictures. Skip this
-for changes the code explains: the links are long, and those need no more
-than the pictures. Run the how-one-story-was-captured
+Before you call a change a regression, check how it was captured. Do this
+only for a change the code does not explain: the links are long, and most
+changes need no more than the pictures. Run the how-one-story-was-captured
 recipe ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
 with its `storyId`.
 
