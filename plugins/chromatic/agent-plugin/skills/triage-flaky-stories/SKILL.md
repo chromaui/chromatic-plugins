@@ -90,7 +90,9 @@ with its `storyId`, on the build that ignored it. `links.trace` is a
 Playwright trace of the capture: what the page loaded, ran and looked like as
 it was captured. Give the user
 `https://trace.playwright.dev/?trace=` followed by the trace link,
-URL-encoded, to open it. Write the whole link out, not a placeholder. A
+URL-encoded as the value of `trace=`, to open it. The trace link is signed and
+expires: give it in your reply only, never in a page, pull request or issue,
+and put the test's `webUrl` beside it as the link that lasts. A
 `RESOURCES_FAILED_TO_LOAD` warning names a font or image that did not load in
 time, which is the remote-assets row above. When `links.trace` is null, the
 capture was not traced; give the test's `webUrl` instead.

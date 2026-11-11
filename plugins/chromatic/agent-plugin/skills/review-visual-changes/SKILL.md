@@ -133,10 +133,12 @@ with its `storyId`.
 - `links.domSnapshot` is the HTML the story rendered. Download it and look
   for what the snapshot should show: the right text, an element mid
   animation, a loading state.
-- `links.trace` is a Playwright trace of the capture. Give the person
+- `links.trace` is a Playwright trace of the capture. When it would help the
+  person see it for themselves, give them
   `https://trace.playwright.dev/?trace=` followed by the trace link,
-  URL-encoded, when it would help them see it for themselves. Write the whole
-  link out, not a placeholder.
+  URL-encoded as the value of `trace=`. The trace link is signed and expires:
+  give it in your reply only, never in a page, pull request or issue, and put
+  the test's `webUrl` beside it as the link that lasts.
 
 When the capture explains the change, keep it a **Check** and say it looks
 like a capture problem rather than a regression of this branch: name the

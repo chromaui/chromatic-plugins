@@ -78,7 +78,9 @@ cause in the repository:
   - `links.trace` is a Playwright trace zip, when the capture was traced.
     Download it, or give the user
     `https://trace.playwright.dev/?trace=` followed by the trace link,
-    URL-encoded. Write the whole link out, not a placeholder.
+    URL-encoded as the value of `trace=`. The trace link is signed and
+    expires: give it in your reply only, never in a pull request or issue,
+    and put the test's `webUrl` beside it as the link that lasts.
 
   If a link is null or does not download, say so, work from the error
   fields, and point the user at the test's `webUrl` for the full report.
