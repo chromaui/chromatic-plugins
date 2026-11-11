@@ -1,7 +1,6 @@
 ---
 name: check-merge-readiness
 description: Says whether a branch is ready to merge from Chromatic's side, by checking its latest build against the current commit, broken and denied tests, changes still waiting for review, open reviewer comments and new accessibility violations, and lists what is left. Use when the user asks if their branch or pull request is ready to merge, what is blocking the Chromatic check, or what is left to do before merging, and before you merge a pull request yourself in a repository tested by Chromatic.
-argument-hint: "[branch]"
 ---
 
 # Check merge readiness

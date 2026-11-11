@@ -59,8 +59,7 @@ branch that is not limited.
 
 ### 2. Read the totals
 
-Run the build-counts recipe from the `query-chromatic` skill
-([recipes](../query-chromatic/references/recipes.md)) for `testCount`, and
+Run the build-counts recipe from the `query-chromatic` skill for `testCount`, and
 the snapshots recipe's first page for `browsers`, `componentCount` and
 `specCount`. Report tests, browsers, and tests × browsers as the visual
 snapshots one full build captures.

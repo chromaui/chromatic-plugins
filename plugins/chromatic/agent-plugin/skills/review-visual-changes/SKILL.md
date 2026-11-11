@@ -69,7 +69,7 @@ move many stories.
 
 ### 3. List the pending changes
 
-Run the tests-by-status recipe from the `query-chromatic` skill ([recipes](../query-chromatic/references/recipes.md)) with
+Run the tests-by-status recipe from the `query-chromatic` skill with
 `statuses: [PENDING]`. The recipe orders by `resultOrder`: new stories first,
 then changes. Page until done, or stop at 50 and tell the user how many
 remain. `result: ADDED` is a new story with no baseline; it needs a look, not
@@ -122,7 +122,7 @@ large.
 Before you call a change a regression, check how it was captured. Do this
 only for a change the code does not explain: the links are long, and most
 changes need no more than the pictures. Run the how-one-story-was-captured
-recipe ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
+recipe from the `query-chromatic` skill
 with its `storyId`.
 
 - A `RESOURCES_FAILED_TO_LOAD` warning names the fonts, images or scripts
@@ -178,7 +178,7 @@ Where to put it, best first:
 Your verdicts are advice. A review changes Chromatic for everyone on the
 project, so accept or deny only what the person asked for, with
 `chromatic_mutate` and the review-a-test recipe
-([recipes](../query-chromatic/references/recipes.md#review-a-test)).
+from the `query-chromatic` skill.
 
 - **Ask first when the request did not name it.** "Looks good", "merge it if
   it's fine" or "ship it" is not a request to accept these tests. Ask one

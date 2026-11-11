@@ -37,7 +37,7 @@ Broken stories:
 
 Call `chromatic_get_latest_build` for the current branch. For the project id
 and branch, follow the `get-latest-build` skill. When the user names a build
-number instead, use the build-by-number recipe in the `query-chromatic` skill ([recipes](../query-chromatic/references/recipes.md)).
+number instead, use the build-by-number recipe in the `query-chromatic` skill.
 
 - `BROKEN`, or result `CAPTURE_ERROR`: continue.
 - `FAILED`, or result `SYSTEM_ERROR`: a Chromatic infrastructure error, not the
@@ -47,7 +47,7 @@ number instead, use the build-by-number recipe in the `query-chromatic` skill ([
 
 ### 2. List the broken tests
 
-Run the tests-by-status recipe from the `query-chromatic` skill ([recipes](../query-chromatic/references/recipes.md)) with
+Run the tests-by-status recipe from the `query-chromatic` skill with
 `statuses: [BROKEN]`. Page until `hasNextPage` is false. The count is the
 number of story and mode pairs that failed, not the number of stories.
 
