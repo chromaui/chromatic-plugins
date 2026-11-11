@@ -1,8 +1,6 @@
 ---
 name: run-build
 description: Runs a Chromatic build from this machine with the Chromatic CLI, limited to the stories being worked on, waits for the result, and reports it, so a fix can be verified without pushing and waiting for CI. Use when the user asks to run Chromatic, to verify a fix on Chromatic now, or to check why TurboSnap tested more stories than expected.
-disable-model-invocation: true
-argument-hint: "[story name or glob]"
 ---
 
 # Run a Chromatic build

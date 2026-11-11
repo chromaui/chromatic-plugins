@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "chromatic",
-      "source": "plugins/chromatic/agent-plugin",
+      "source": "plugins/chromatic",
       "description": "Chromatic visual testing integration. Review visual changes, fix broken and flaky stories, check a branch is ready to merge, fix accessibility violations, and ask the Chromatic API anything else."
     }
   ]

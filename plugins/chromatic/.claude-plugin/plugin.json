@@ -6,7 +6,8 @@
   "version": "0.9.0",
   "author": {
     "name": "Chromatic",
-    "email": "support@chromatic.com"
+    "email": "support@chromatic.com",
+    "url": "https://www.chromatic.com"
   },
   "homepage": "https://www.chromatic.com/docs/mcp",
   "repository": "https://github.com/chromaui/chromatic-plugins",
