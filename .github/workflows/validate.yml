@@ -52,7 +52,7 @@ jobs:
           set -eu
           claude_version=$(jq -r '.version' plugins/chromatic/.claude-plugin/plugin.json)
           agent_version=$(jq -r '.version' plugins/chromatic/agent-plugin/plugin.json)
-          cursor_version=$(jq -r '.version' plugins/chromatic/agent-plugin/.cursor-plugin/plugin.json)
+          cursor_version=$(jq -r '.version' plugins/chromatic/.cursor-plugin/plugin.json)
           marketplace_version=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
           package_version=$(jq -r '.version' package.json)
           test "$claude_version" = "$agent_version" || { echo "plugin versions disagree: $claude_version vs $agent_version"; exit 1; }
@@ -85,20 +85,32 @@ jobs:
           test ! -e "$claude/skills" || { echo "skills belong in $package/skills, which both agents read"; exit 1; }
           test ! -e "$claude/.codex-plugin" || { echo "Codex reads $package/plugin.json; a .codex-plugin manifest would be ignored and drift"; exit 1; }
 
-      # Cursor reads the package too, but it cannot sign in from the shared
-      # mcp.json: it registers dynamically or uses a static client ID, and
-      # Chromatic offers no dynamic registration. The standard's mcp.json has
-      # no auth field, and an invalid one turns off MCP in every agent, so
-      # Cursor gets its own MCP config beside its manifest. Other agents only
-      # read plugin.json, skills/ and mcp.json, so they never see it.
+      # Cursor cannot sign in from the shared mcp.json: it registers
+      # dynamically or uses a static client ID, and Chromatic offers no
+      # dynamic registration. The standard's mcp.json has no auth field, an
+      # invalid one turns off MCP in every agent, and the standard requires
+      # client-specific files to stay out of the package except in a
+      # reverse-domain folder, which Cursor does not read. So, like Claude
+      # Code, Cursor gets its own manifest in plugins/chromatic, outside the
+      # package, that reads the package's skills and its own MCP config.
       - name: Cursor signs in with the static client
         run: |
           set -eu
+          claude=plugins/chromatic
           package=plugins/chromatic/agent-plugin
-          cursor="$package/.cursor-plugin"
+          cursor="$claude/.cursor-plugin"
+          test ! -e "$package/.cursor-plugin" || { echo "client files stay out of the Agent Plugins package; Cursor's manifest lives in $cursor"; exit 1; }
+          jq -e '.plugins | map(.source) == ["plugins/chromatic"]' .cursor-plugin/marketplace.json > /dev/null || { echo "the Cursor marketplace must point at plugins/chromatic"; exit 1; }
+          jq -e '.skills == "./agent-plugin/skills/"' "$cursor/plugin.json" > /dev/null || { echo "the Cursor manifest must read its skills from the package"; exit 1; }
           mcp=$(jq -er '.mcpServers' "$cursor/plugin.json")
-          test "$mcp" = "./.cursor-plugin/mcp.json" || { echo "the Cursor manifest must read its MCP config from .cursor-plugin/mcp.json, not the shared mcp.json"; exit 1; }
-          jq -e 'has("skills") | not' "$cursor/plugin.json" > /dev/null || { echo "Cursor finds the skills in skills/ on its own; a skills path would replace that"; exit 1; }
+          test "$mcp" = "./.cursor-plugin/mcp.json" || { echo "the Cursor manifest must read its MCP config from .cursor-plugin/mcp.json"; exit 1; }
+          jq -e 'has("hooks") | not' "$cursor/plugin.json" > /dev/null || { echo "the hooks are written for Claude Code; Cursor must not load them"; exit 1; }
+          for dir in agents rules commands; do
+            test ! -e "$claude/$dir" || { echo "Cursor would load $claude/$dir on its own; keep it out of the Cursor plugin root"; exit 1; }
+          done
+          test ! -e "$claude/hooks/hooks.json" || { echo "Cursor would load hooks/hooks.json on its own; keep the Claude hooks in hooks/claude-code.json"; exit 1; }
+          logo=$(jq -er '.logo' "$cursor/plugin.json")
+          test -f "$claude/$logo" || { echo "the Cursor logo path does not exist: $logo"; exit 1; }
           package_url=$(jq -er '.mcpServers.chromatic.url' "$package/mcp.json")
           cursor_url=$(jq -er '.mcpServers.chromatic.url' "$cursor/mcp.json")
           test "$package_url" = "$cursor_url" || { echo "the MCP URLs disagree: $package_url vs $cursor_url"; exit 1; }
@@ -165,6 +177,16 @@ jobs:
             test -f "$skill/SKILL.md" || { echo "missing SKILL.md in $skill"; exit 1; }
             test -f "$skill/agents/openai.yaml" || { echo "missing agents/openai.yaml in $skill"; exit 1; }
           done
+
+      # Agent Skills (https://agentskills.io/specification): only the six
+      # defined frontmatter fields, a name that matches its folder, a
+      # description of 1 to 1024 characters, and file references that stay
+      # inside the skill's own folder. Claude's validator accepts Claude-only
+      # fields, so it cannot catch these.
+      - name: Skills follow the Agent Skills specification
+        run: |
+          set -eu
+          node scripts/check-skills.mjs plugins/chromatic/agent-plugin/skills
 
       # Pinned, so a new release of the CLI cannot change what CI runs. Raise
       # it by hand when a newer validator is needed.

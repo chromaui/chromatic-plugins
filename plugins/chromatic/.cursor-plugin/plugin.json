@@ -10,7 +10,8 @@
   "homepage": "https://www.chromatic.com/docs/mcp",
   "repository": "https://github.com/chromaui/chromatic-plugins",
   "license": "MIT",
-  "logo": "assets/icon.png",
+  "logo": "agent-plugin/assets/icon.png",
   "keywords": ["chromatic", "storybook", "visual-testing", "visual-review", "accessibility", "a11y", "axe", "graphql", "mcp"],
+  "skills": "./agent-plugin/skills/",
   "mcpServers": "./.cursor-plugin/mcp.json"
 }

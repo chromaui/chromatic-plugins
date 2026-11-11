@@ -42,12 +42,12 @@ Review feedback:
 
 Call `chromatic_get_latest_build` for the current branch (see
 the `get-latest-build` skill). When the user names a build number, use the
-build-by-number recipe in the `query-chromatic` skill ([recipes](../query-chromatic/references/recipes.md)). If the build has no
+"Build by number" recipe in the `query-chromatic` skill. If the build has no
 open threads and the user expected some, ask which build the comments are on.
 
 ### 2. Collect the open threads
 
-Run the discussions recipe from the `query-chromatic` skill ([recipes](../query-chromatic/references/recipes.md)). Keep threads
+Run the "Reviewer comments on a build" recipe from the `query-chromatic` skill. Keep threads
 whose `status` is `ACTIVE`; skip `RESOLVED` ones unless the user asks. Page
 until done. Most threads belong to one test, a story in one mode. A thread
 whose `test` is null is attached to a single snapshot; identify it by its
