@@ -134,11 +134,11 @@ with its `storyId`.
   for what the snapshot should show: the right text, an element mid
   animation, a loading state.
 - `links.trace` is a Playwright trace of the capture. When it would help the
-  person see it for themselves, give them
-  `https://trace.playwright.dev/?trace=` followed by the trace link,
-  URL-encoded as the value of `trace=`. The trace link is signed and expires:
-  give it in your reply only, never in a page, pull request or issue, and put
-  the test's `webUrl` beside it as the link that lasts.
+  person see it for themselves, write out in your reply
+  `https://trace.playwright.dev/?trace=` followed by the whole trace link,
+  URL-encoded as the value of `trace=`, with the test's `webUrl` beside it as
+  the link that lasts. The trace link is signed and expires soon, so it goes
+  in the reply only, never in a page, pull request or issue.
 
 When the capture explains the change, keep it a **Check** and say it looks
 like a capture problem rather than a regression of this branch: name the
