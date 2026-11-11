@@ -32,7 +32,7 @@ Visual review:
 - [ ] 1. Find the build for this commit
 - [ ] 2. Read the code change
 - [ ] 3. List the pending changes, and set aside the ones that are not this branch's
-- [ ] 4. Look at each change
+- [ ] 4. Look at each change, and check how each unexplained one was captured
 - [ ] 5. Show the person
 - [ ] 6. Accept or deny, only when asked
 ```
@@ -119,9 +119,10 @@ large.
     shows text, layout or color moving where the code did not ask for it.
   - **Unclear**: say what you could not tell, and why.
 
-Before you call a change a regression, check how it was captured. Do this
-only for a change the code does not explain: the links are long, and most
-changes need no more than the pictures. Run the how-one-story-was-captured
+For every change the code does not explain, check how it was captured
+before you report it, even when you could not view its pictures. Skip this
+for changes the code explains: the links are long, and those need no more
+than the pictures. Run the how-one-story-was-captured
 recipe ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
 with its `storyId`.
 
@@ -132,8 +133,9 @@ with its `storyId`.
   for what the snapshot should show: the right text, an element mid
   animation, a loading state.
 - `links.trace` is a Playwright trace of the capture. Give the person
-  `https://trace.playwright.dev/?trace=<the link, URL-encoded>` when it would
-  help them see it for themselves.
+  `https://trace.playwright.dev/?trace=` followed by the trace link,
+  URL-encoded, when it would help them see it for themselves. Write the whole
+  link out, not a placeholder.
 
 When the capture explains the change, keep it a **Check** and say it looks
 like a capture problem rather than a regression of this branch: name the
@@ -160,8 +162,9 @@ pictures, not only links.
    count; stories the build ignored or quarantined; and anything you could
    not see.
 4. The build's `webUrl`, and each **Check** test's `webUrl`.
-5. The exact reply that accepts the expected changes, naming the tests and
-   the build, such as "accept the 9 Button changes on build 57".
+5. End with the exact reply, in quotes, that accepts the expected changes,
+   naming the tests and the build, such as "accept the 9 Button changes on
+   build 57". Give it even when you could show no pictures.
 
 Where to put it, best first:
 
