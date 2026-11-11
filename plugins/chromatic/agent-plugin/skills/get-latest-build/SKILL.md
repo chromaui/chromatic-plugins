@@ -6,7 +6,8 @@ argument-hint: "[branch]"
 
 # Latest Chromatic build
 
-Answer "what is the state of my branch on Chromatic?" with one tool call.
+Answer "what is the state of my branch on Chromatic?" with one tool call,
+two if the branch has no build or its latest build was skipped.
 
 ## Steps
 
@@ -23,8 +24,18 @@ Answer "what is the state of my branch on Chromatic?" with one tool call.
    from, the change and awaiting-review counts, and `webUrl`. If
    `isSuperseded` is true, say a newer build exists. If the build is still in
    progress, say so rather than reading results into it.
-6. Compare the build's `commit` with `git rev-parse HEAD`. If they differ,
-   say the build is for an older commit. Right after a push the new build may
+
+   If the status is `SKIPPED`, do not give its `webUrl`: Chromatic leaves
+   skipped builds out of its build lists, so the link leads nowhere useful.
+   Say it was skipped and tested nothing, then call
+   `chromatic_get_latest_build` again with the same filters (keep `branches`
+   out if step 4 dropped it) and `statuses` set to `PASSED`, `PENDING`,
+   `ACCEPTED`, `DENIED` and `BROKEN`, the builds that produced results.
+   Report that build, with its link, as the last one that ran. If none comes
+   back, say no build on this branch has run yet.
+6. Compare the build's `commit` with `git rev-parse HEAD`; after a skipped
+   build, compare the skipped build's commit, not the fallback's. If they
+   differ, say the build is for an older commit. Right after a push the new build may
    not exist yet: ask again in about 30 seconds.
 
 Explain the status in one sentence, with what to do next, from

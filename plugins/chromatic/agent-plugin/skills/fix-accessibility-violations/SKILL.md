@@ -60,6 +60,20 @@ next run finds it. The `connect-project` skill is that exact procedure;
 follow it, then come back here. A project token (what the CLI and CI
 authenticate with) is not a project id, and the tool refuses it.
 
+**Check the project type.** Chromatic runs accessibility tests only on
+Storybook projects. If you have not already, ask `chromatic_query` for
+`project(id: $projectId) { type }` (skip this check if `chromatic_query` is
+not available). When `type` is set and is anything other than `STORYBOOK`
+(today `PLAYWRIGHT`, `CYPRESS` or `VITEST`), say that Chromatic does not run accessibility tests for this kind of
+project, so there are no violations to read, and stop. Do not suggest turning
+accessibility tests on or running another build: neither helps. A null `type`
+means the API did not say; carry on. React Native Storybook projects have no
+accessibility tests either, and the API cannot tell them apart. If the
+Storybook this project builds is a React Native one (its Storybook config or
+build script uses `@storybook/react-native`), say that instead of searching
+builds. The package merely being installed is not enough: a repository can
+hold a web and a native Storybook side by side.
+
 A build has not finished while its status is `ANNOUNCED`, `PUBLISHED`,
 `PREPARED` or `IN_PROGRESS`. The accessibility tools then answer that its tests
 are not available yet. On this first lookup, say so and stop rather than
