@@ -113,4 +113,7 @@ request, and never conclude from the workflow file that a branch can merge
 unreviewed.
 
 This reports; it changes nothing. To accept changes, follow
-`review-visual-changes`, which accepts only what the person asks for.
+`review-visual-changes`, which accepts only what the person asks for. When
+the person also wants what is left judged, such as whether the waiting
+changes are right, run the skill in the failing row's last column before you
+answer, rather than only naming it.
