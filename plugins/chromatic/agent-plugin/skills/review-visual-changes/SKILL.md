@@ -168,7 +168,10 @@ pictures, not only links.
 5. End with the exact reply that accepts the expected changes, or the one
    question from step 6 that a yes answers, naming the tests and the build,
    such as "Accept the 9 Button changes on build 57?". Give it even when you
-   could show no pictures.
+   could show no pictures, but then say in it that the verdicts are
+   unconfirmed, so that a yes accepts with that known: "I could not see the
+   pictures, so these verdicts are unconfirmed. Accept the 9 Button changes
+   on build 57 anyway?"
 
 Where to put it, best first:
 
