@@ -32,7 +32,7 @@ Visual review:
 - [ ] 1. Find the build for this commit
 - [ ] 2. Read the code change
 - [ ] 3. List the pending changes, and set aside the ones that are not this branch's
-- [ ] 4. Look at each change
+- [ ] 4. Look at each change, and check how each unexplained one was captured
 - [ ] 5. Show the person
 - [ ] 6. Accept or deny, only when asked
 ```
@@ -112,6 +112,8 @@ large.
   show it.
 - If you cannot fetch or view images, say so at the top of the report and
   judge from the code change alone, marking every verdict as unconfirmed.
+  Still check how each change the code does not explain was captured, as
+  below: that is a query, not a picture.
 - Decide:
   - **Expected**: the change is in a component the branch touched, and it
     matches what the code change does.
@@ -131,9 +133,12 @@ with its `storyId`.
 - `links.domSnapshot` is the HTML the story rendered. Download it and look
   for what the snapshot should show: the right text, an element mid
   animation, a loading state.
-- `links.trace` is a Playwright trace of the capture. Give the person
-  `https://trace.playwright.dev/?trace=<the link, URL-encoded>` when it would
-  help them see it for themselves.
+- `links.trace` is a Playwright trace of the capture. When it would help the
+  person see it for themselves, write out in your reply
+  `https://trace.playwright.dev/?trace=` followed by the whole trace link,
+  URL-encoded as the value of `trace=`, with the test's `webUrl` beside it as
+  the link that lasts. The trace link is signed and expires soon, so it goes
+  in the reply only, never in a page, pull request or issue.
 
 When the capture explains the change, keep it a **Check** and say it looks
 like a capture problem rather than a regression of this branch: name the
@@ -160,8 +165,13 @@ pictures, not only links.
    count; stories the build ignored or quarantined; and anything you could
    not see.
 4. The build's `webUrl`, and each **Check** test's `webUrl`.
-5. The exact reply that accepts the expected changes, naming the tests and
-   the build, such as "accept the 9 Button changes on build 57".
+5. End with the exact reply that accepts the expected changes, or the one
+   question from step 6 that a yes answers, naming the tests and the build,
+   such as "Accept the 9 Button changes on build 57?". Give it even when you
+   could show no pictures, but then say in it that the verdicts are
+   unconfirmed, so that a yes accepts with that known: "I could not see the
+   pictures, so these verdicts are unconfirmed. Accept the 9 Button changes
+   on build 57 anyway?"
 
 Where to put it, best first:
 

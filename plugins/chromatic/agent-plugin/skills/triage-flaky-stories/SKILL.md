@@ -88,8 +88,11 @@ recipe from the `query-chromatic` skill
 ([recipes](../query-chromatic/references/recipes.md#how-one-story-was-captured))
 with its `storyId`, on the build that ignored it. `links.trace` is a
 Playwright trace of the capture: what the page loaded, ran and looked like as
-it was captured. Give the user
-`https://trace.playwright.dev/?trace=<the link, URL-encoded>` to open it. A
+it was captured. Write out in your reply
+`https://trace.playwright.dev/?trace=` followed by the whole trace link,
+URL-encoded as the value of `trace=`, with the test's `webUrl` beside it as
+the link that lasts. The trace link is signed and expires soon, so it goes in
+the reply only, never in a page, pull request or issue. A
 `RESOURCES_FAILED_TO_LOAD` warning names a font or image that did not load in
 time, which is the remote-assets row above. When `links.trace` is null, the
 capture was not traced; give the test's `webUrl` instead.

@@ -76,8 +76,11 @@ cause in the repository:
     took a screenshot. An interaction failure has one: read it to see what
     the `play` function found on the page.
   - `links.trace` is a Playwright trace zip, when the capture was traced.
-    Download it, or give the user
-    `https://trace.playwright.dev/?trace=<the link, URL-encoded>`.
+    Download it, or write out in your reply
+    `https://trace.playwright.dev/?trace=` followed by the whole trace link,
+    URL-encoded as the value of `trace=`, with the test's `webUrl` beside it
+    as the link that lasts. The trace link is signed and expires soon, so it
+    goes in the reply only, never in a pull request or issue.
 
   If a link is null or does not download, say so, work from the error
   fields, and point the user at the test's `webUrl` for the full report.
