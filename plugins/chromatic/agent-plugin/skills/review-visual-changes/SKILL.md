@@ -163,9 +163,10 @@ pictures, not only links.
    count; stories the build ignored or quarantined; and anything you could
    not see.
 4. The build's `webUrl`, and each **Check** test's `webUrl`.
-5. End with the exact reply, in quotes, that accepts the expected changes,
-   naming the tests and the build, such as "accept the 9 Button changes on
-   build 57". Give it even when you could show no pictures.
+5. End with the exact reply that accepts the expected changes, or the one
+   question from step 6 that a yes answers, naming the tests and the build,
+   such as "Accept the 9 Button changes on build 57?". Give it even when you
+   could show no pictures.
 
 Where to put it, best first:
 
