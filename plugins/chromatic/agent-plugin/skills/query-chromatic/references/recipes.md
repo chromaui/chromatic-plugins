@@ -17,6 +17,7 @@ adding a field that is not here.
 - [Quarantined stories](#quarantined-stories)
 - [Components in a published Storybook](#components-in-a-published-storybook)
 - [A branch's latest build, with its counts](#a-branchs-latest-build-with-its-counts)
+- [Latest build, including local builds](#latest-build-including-local-builds)
 - [Where a build's snapshots go](#where-a-builds-snapshots-go)
 - [Ignored tests on a build](#ignored-tests-on-a-build)
 - [How the project is set up](#how-the-project-is-set-up)
@@ -502,6 +503,39 @@ query BranchBuild($projectId: ID!, $branch: String!) {
             webUrl
           }
         }
+      }
+    }
+  }
+}
+```
+
+## Latest build, including local builds
+
+The Visual Tests addon in Storybook runs builds from the developer's machine,
+called local builds. `lastBuild` leaves them out unless `localBuilds` says
+otherwise: `{}` returns local and CI builds alike, and `{ isLocalBuild: true }`
+only local ones. `{ localBuildEmailHash: $hash }` returns CI builds plus one
+person's local builds, where the hash is the MD5 hex of their git email,
+trimmed and lowercased, as from `git config user.email`. Set one field at
+most: the API refuses both. A build does not say whether it ran locally, so
+to tell, run the query again with `{ isLocalBuild: true }` and compare ids.
+
+```graphql
+query LatestBuildWithLocal($projectId: ID!, $branch: String!) {
+  project(id: $projectId) {
+    lastBuild(branches: [$branch], localBuilds: {}) {
+      id
+      number
+      status
+      branch
+      commit
+      createdAt
+      isSuperseded
+      ... on CompletedBuild {
+        webUrl
+        result
+        pendingCount: testCount(statuses: [PENDING])
+        brokenCount: testCount(statuses: [BROKEN])
       }
     }
   }

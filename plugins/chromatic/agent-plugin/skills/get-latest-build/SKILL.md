@@ -27,6 +27,11 @@ Answer "what is the state of my branch on Chromatic?" with one tool call.
    say the build is for an older commit. Right after a push the new build may
    not exist yet: ask again in about 30 seconds.
 
+The tool leaves out local builds, the ones the Storybook Visual Tests addon
+runs from a developer's machine. When the user asks about a build from the
+addon, or no build matches and they ran one locally, use the "Latest build,
+including local builds" recipe in the `query-chromatic` skill.
+
 Explain the status in one sentence, with what to do next, from
 [references/build-states.md](references/build-states.md).
 
