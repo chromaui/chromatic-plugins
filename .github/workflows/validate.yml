@@ -105,6 +105,9 @@ jobs:
           mcp=$(jq -er '.mcpServers' "$cursor/plugin.json")
           test "$mcp" = "./.cursor-plugin/mcp.json" || { echo "the Cursor manifest must read its MCP config from .cursor-plugin/mcp.json"; exit 1; }
           jq -e 'has("hooks") | not' "$cursor/plugin.json" > /dev/null || { echo "the hooks are written for Claude Code; Cursor must not load them"; exit 1; }
+          for dir in agents rules commands; do
+            test ! -e "$claude/$dir" || { echo "Cursor would load $claude/$dir on its own; keep it out of the Cursor plugin root"; exit 1; }
+          done
           test ! -e "$claude/hooks/hooks.json" || { echo "Cursor would load hooks/hooks.json on its own; keep the Claude hooks in hooks/claude-code.json"; exit 1; }
           logo=$(jq -er '.logo' "$cursor/plugin.json")
           test -f "$claude/$logo" || { echo "the Cursor logo path does not exist: $logo"; exit 1; }
@@ -174,6 +177,16 @@ jobs:
             test -f "$skill/SKILL.md" || { echo "missing SKILL.md in $skill"; exit 1; }
             test -f "$skill/agents/openai.yaml" || { echo "missing agents/openai.yaml in $skill"; exit 1; }
           done
+
+      # Agent Skills (https://agentskills.io/specification): only the six
+      # defined frontmatter fields, a name that matches its folder, a
+      # description of 1 to 1024 characters, and file references that stay
+      # inside the skill's own folder. Claude's validator accepts Claude-only
+      # fields, so it cannot catch these.
+      - name: Skills follow the Agent Skills specification
+        run: |
+          set -eu
+          node scripts/check-skills.mjs plugins/chromatic/agent-plugin/skills
 
       # Pinned, so a new release of the CLI cannot change what CI runs. Raise
       # it by hand when a newer validator is needed.

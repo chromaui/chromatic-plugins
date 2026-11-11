@@ -69,7 +69,7 @@ move many stories.
 
 ### 3. List the pending changes
 
-Run the tests-by-status recipe from the `query-chromatic` skill with
+Run the "Tests on a build, by status" recipe from the `query-chromatic` skill with
 `statuses: [PENDING]`. The recipe orders by `resultOrder`: new stories first,
 then changes. Page until done, or stop at 50 and tell the user how many
 remain. `result: ADDED` is a new story with no baseline; it needs a look, not
@@ -91,7 +91,8 @@ pending tests in two:
 
 ### 4. Look at each change
 
-For each story that is this branch's, run the visual-change recipe with its
+For each story that is this branch's, run the "The visual change on one story" recipe from the
+`query-chromatic` skill with its
 `storyId`. Each comparison is one browser at one viewport. An image URL is
 about 1,000 characters, so ask for one story per call; a query for many
 stories with their images fills the conversation, and can be refused as too
@@ -121,7 +122,7 @@ large.
 
 Before you call a change a regression, check how it was captured. Do this
 only for a change the code does not explain: the links are long, and most
-changes need no more than the pictures. Run the how-one-story-was-captured
+changes need no more than the pictures. Run the "How one story was captured"
 recipe from the `query-chromatic` skill
 with its `storyId`.
 
@@ -177,8 +178,8 @@ Where to put it, best first:
 
 Your verdicts are advice. A review changes Chromatic for everyone on the
 project, so accept or deny only what the person asked for, with
-`chromatic_mutate` and the review-a-test recipe
-from the `query-chromatic` skill.
+`chromatic_mutate` and the "Review a test" recipe
+(under "Changing a test") from the `query-chromatic` skill.
 
 - **Ask first when the request did not name it.** "Looks good", "merge it if
   it's fine" or "ship it" is not a request to accept these tests. Ask one
