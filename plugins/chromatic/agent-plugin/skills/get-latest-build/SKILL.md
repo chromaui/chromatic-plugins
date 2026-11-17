@@ -1,7 +1,6 @@
 ---
 name: get-latest-build
 description: Reports the latest Chromatic build for this repository's project, on the current branch unless another is named. Use when the user asks what Chromatic thinks of their branch, whether the build passed or is still running, for the build id the accessibility tools need, or right after a push to see whether Chromatic has built the new commit.
-argument-hint: "[branch]"
 ---
 
 # Latest Chromatic build

@@ -1,8 +1,6 @@
 ---
 name: run-build
-description: Runs a Chromatic build from this machine with the Chromatic CLI, limited to the stories being worked on, waits for the result, and reports it, so a fix can be verified without pushing and waiting for CI. Use when the user asks to run Chromatic, to verify a fix on Chromatic now, or to check why TurboSnap tested more stories than expected.
-disable-model-invocation: true
-argument-hint: "[story name or glob]"
+description: Runs a Chromatic build from this machine with the Chromatic CLI, limited to the stories being worked on, waits for the result, and reports it, so a fix can be verified without pushing and waiting for CI. Use only when the user explicitly asks to run a Chromatic build or to verify a fix on Chromatic now, or asks why TurboSnap tested more stories than expected; never start a build on your own initiative.
 ---
 
 # Run a Chromatic build
@@ -46,7 +44,10 @@ builds unattended.
    from you. Pass each one as a single quoted argument, and refuse any that
    contains a quote, backtick, `$` or newline.
 
-   Tell the user the scope and wait for a yes.
+   Show the user the exact command line you will run, then stop and wait.
+   Only a yes to that command, given after you showed it, counts. A general
+   go-ahead such as "go ahead" or "ship it", a yes to an earlier build, or
+   one given to another skill does not.
 
 2. **Run it.** For example:
 
