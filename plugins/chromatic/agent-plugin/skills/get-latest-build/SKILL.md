@@ -35,8 +35,8 @@ two if the branch has no build or its latest build was skipped.
    back, say no build on this branch has run yet.
 6. Compare the build's `commit` with `git rev-parse HEAD`; after a skipped
    build, compare the skipped build's commit, not the fallback's. If they
-   differ, say the build is for an older commit. Right after a push the new build may
-   not exist yet: ask again in about 30 seconds.
+   differ, say the build is for an older commit. Right after a push the new
+   build may not exist yet: ask again in about 30 seconds.
 
 Explain the status in one sentence, with what to do next, from
 [references/build-states.md](references/build-states.md).
