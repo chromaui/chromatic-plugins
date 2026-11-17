@@ -27,6 +27,19 @@ Answer "what is the state of my branch on Chromatic?" with one tool call.
    say the build is for an older commit. Right after a push the new build may
    not exist yet: ask again in about 30 seconds.
 
+By default the tool leaves out local builds, the ones the Storybook Visual
+Tests addon runs from a developer's machine. When the user asks about a build
+from the addon, or no build matches and they ran one locally, call
+`chromatic_get_latest_build` again with `localBuilds` set to `"include"` (CI
+and local builds) or `"only"` (local builds alone). To add only the user's
+own local builds to the CI builds, pass their `git config user.email` as
+`localBuildAuthorEmail` instead, with `localBuilds` left out. A build does not
+say whether it ran locally.
+
+A Chromatic server older than these options refuses them as unknown
+arguments. Then use the "Latest build, including local builds" recipe in the
+`query-chromatic` skill, which asks the API for the same builds.
+
 Explain the status in one sentence, with what to do next, from
 [references/build-states.md](references/build-states.md).
 
