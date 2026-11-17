@@ -8,7 +8,7 @@
 | `PUBLISHED`   | Uploaded, not ready for testing                              | Wait                                                   |
 | `PREPARED`    | Ready for testing, not started                               | Wait                                                   |
 | `IN_PROGRESS` | Testing stories now                                          | Wait                                                   |
-| `SKIPPED`     | No stories were affected, so nothing ran                     | Read the last build that ran; this one tested nothing  |
+| `SKIPPED`     | No stories were affected, so nothing ran                     | Read the last build that ran; do not link this one     |
 | `PASSED`      | Every test passed without changes                            | Nothing                                                |
 | `PENDING`     | At least one change is waiting for review                    | the `review-visual-changes` skill                      |
 | `ACCEPTED`    | Every change was accepted                                    | Nothing                                                |
