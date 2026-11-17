@@ -3,6 +3,12 @@
 All notable changes to the Chromatic plugins. Versions follow semver; the
 version in `.claude-plugin/plugin.json` is the one installed users see.
 
+## 0.9.1
+
+### Patch Changes
+
+- 60bf345: After a push or a new pull request in a repository with no chromatic.config.json, the hook now tells the agent to say nothing about Chromatic, instead of leaving it to report that there is no build to check.
+
 ## 0.9.0
 
 ### Minor Changes
