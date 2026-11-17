@@ -69,9 +69,9 @@ move many stories.
 
 ### 3. List the pending changes
 
-Run the "Tests on a build, by status" recipe from the `query-chromatic` skill with
-`statuses: [PENDING]`. The recipe orders by `resultOrder`: new stories first,
-then changes. Page until done, or stop at 50 and tell the user how many
+Run the "Tests on a build, by status" recipe from the `query-chromatic` skill
+with `statuses: [PENDING]`. The recipe orders by `resultOrder`: new stories
+first, then changes. Page until done, or stop at 50 and tell the user how many
 remain. `result: ADDED` is a new story with no baseline; it needs a look, not
 a comparison.
 
@@ -91,12 +91,11 @@ pending tests in two:
 
 ### 4. Look at each change
 
-For each story that is this branch's, run the "The visual change on one story" recipe from the
-`query-chromatic` skill with its
-`storyId`. Each comparison is one browser at one viewport. An image URL is
-about 1,000 characters, so ask for one story per call; a query for many
-stories with their images fills the conversation, and can be refused as too
-large.
+For each story that is this branch's, run the "The visual change on one story"
+recipe from the `query-chromatic` skill with its `storyId`. Each comparison is
+one browser at one viewport. An image URL is about 1,000 characters, so ask
+for one story per call; a query for many stories with their images fills the
+conversation, and can be refused as too large.
 
 - Download each image you need with its own command, into a temporary
   directory:

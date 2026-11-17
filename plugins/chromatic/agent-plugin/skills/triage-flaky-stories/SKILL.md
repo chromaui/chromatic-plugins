@@ -41,8 +41,8 @@ Flaky stories:
 
 ### 1. List the quarantined stories
 
-Run the "Quarantined stories" recipe from the `query-chromatic` skill. Page until
-`hasNextPage` is false. An empty list is normal. A null
+Run the "Quarantined stories" recipe from the `query-chromatic` skill. Page
+until `hasNextPage` is false. An empty list is normal. A null
 `links.quarantineDashboard` means quarantine is off for the project; otherwise
 give the user that link with the list.
 

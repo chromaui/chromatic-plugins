@@ -188,6 +188,16 @@ jobs:
           set -eu
           node scripts/check-skills.mjs plugins/chromatic/agent-plugin/skills
 
+      # The Agent Skills project's own validator, pinned. It reads the
+      # frontmatter with a real YAML parser, so it catches what the script's
+      # line reading cannot, and the script checks the links it does not.
+      - name: Skills pass the Agent Skills reference validator
+        run: |
+          set -eu
+          for skill in plugins/chromatic/agent-plugin/skills/*/; do
+            pipx run --spec skills-ref==0.1.1 agentskills validate "$skill"
+          done
+
       # Pinned, so a new release of the CLI cannot change what CI runs. Raise
       # it by hand when a newer validator is needed.
       - name: Install the Claude CLI

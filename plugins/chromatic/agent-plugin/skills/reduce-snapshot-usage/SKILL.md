@@ -60,9 +60,9 @@ branch that is not limited.
 ### 2. Read the totals
 
 Run the "What a build holds, in counts" recipe from the `query-chromatic`
-skill for `testCount`, and the "Where a build's snapshots go" recipe's first page for `browsers`, `componentCount` and
-`specCount`. Report tests, browsers, and tests × browsers as the visual
-snapshots one full build captures.
+skill for `testCount`, and the "Where a build's snapshots go" recipe's first
+page for `browsers`, `componentCount` and `specCount`. Report tests, browsers,
+and tests × browsers as the visual snapshots one full build captures.
 
 Read `links.manage` now as well, with the "How the project is set up" recipe or
 `project(id:) { links { manage } }`. Browsers are changed on that screen, so
@@ -70,8 +70,9 @@ the report has to link it.
 
 ### 3. Find where the tests go
 
-Page through the "Where a build's snapshots go" recipe with `after` until `hasNextPage` is false.
-Count tests by mode, by component, and by story. Then report:
+Page through the "Where a build's snapshots go" recipe with `after` until
+`hasNextPage` is false. Count tests by mode, by component, and by story. Then
+report:
 
 - **Modes.** How many tests run in each mode, and which stories run in more
   than one.

@@ -1,6 +1,7 @@
 // Checks every skill against the Agent Skills specification
 // (https://agentskills.io/specification). No dependencies: the frontmatter is
-// flat YAML, so each top-level key is a line that starts at column 0.
+// simple YAML, so each top-level key is a line that starts at column 0, and
+// the indented lines under it are its folded text or, for metadata, its map.
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -22,10 +23,28 @@ for (const dir of readdirSync(root, { withFileTypes: true })) {
     continue;
   }
   const fields = {};
+  const nested = {};
+  let current;
   for (const line of match[1].split('\n')) {
     const key = line.match(/^([A-Za-z][\w-]*):\s?(.*)$/);
-    if (key) fields[key[1]] = key[2];
+    if (key) {
+      current = key[1];
+      fields[current] = key[2].replace(/^[>|][-+]?$/, '');
+      nested[current] = [];
+    } else if (current && /^\s+\S/.test(line)) {
+      nested[current].push(line.trim());
+    }
   }
+  for (const key of ['description', 'compatibility']) {
+    if (key in fields && nested[key].length) fields[key] = [fields[key], ...nested[key]].filter(Boolean).join(' ');
+    if (key in fields) fields[key] = fields[key].replace(/^(["'])(.*)\1$/, '$2');
+  }
+  if ('metadata' in fields) {
+    if (fields.metadata !== '' || !nested.metadata.every((line) => /^[\w.-]+:\s+\S/.test(line))) {
+      errors.push(`${file}: metadata must be a map from string keys to string values`);
+    }
+  }
+  if ((fields.compatibility ?? '').length > 500) errors.push(`${file}: compatibility is over 500 characters`);
   for (const key of Object.keys(fields)) {
     if (!allowed.has(key)) errors.push(`${file}: "${key}" is not an Agent Skills field; put client-specific data elsewhere`);
   }

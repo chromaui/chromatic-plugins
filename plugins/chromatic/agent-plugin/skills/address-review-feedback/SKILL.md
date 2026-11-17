@@ -47,11 +47,11 @@ open threads and the user expected some, ask which build the comments are on.
 
 ### 2. Collect the open threads
 
-Run the "Reviewer comments on a build" recipe from the `query-chromatic` skill. Keep threads
-whose `status` is `ACTIVE`; skip `RESOLVED` ones unless the user asks. Page
-until done. Most threads belong to one test, a story in one mode. A thread
-whose `test` is null is attached to a single snapshot; identify it by its
-`webUrl` and ask the user which component it means.
+Run the "Reviewer comments on a build" recipe from the `query-chromatic`
+skill. Keep threads whose `status` is `ACTIVE`; skip `RESOLVED` ones unless
+the user asks. Page until done. Most threads belong to one test, a story in
+one mode. A thread whose `test` is null is attached to a single snapshot;
+identify it by its `webUrl` and ask the user which component it means.
 
 ### 3. Sort each thread
 

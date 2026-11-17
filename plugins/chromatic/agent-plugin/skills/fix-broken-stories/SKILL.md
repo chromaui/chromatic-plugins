@@ -47,8 +47,8 @@ number instead, use the "Build by number" recipe in the `query-chromatic` skill.
 
 ### 2. List the broken tests
 
-Run the "Tests on a build, by status" recipe from the `query-chromatic` skill with
-`statuses: [BROKEN]`. Page until `hasNextPage` is false. The count is the
+Run the "Tests on a build, by status" recipe from the `query-chromatic` skill
+with `statuses: [BROKEN]`. Page until `hasNextPage` is false. The count is the
 number of story and mode pairs that failed, not the number of stories.
 
 ### 3. Group them by error kind
