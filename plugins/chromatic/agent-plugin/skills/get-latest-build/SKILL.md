@@ -30,7 +30,9 @@ Answer "what is the state of my branch on Chromatic?" with one tool call.
 Explain the status in one sentence, with what to do next, from
 [references/build-states.md](references/build-states.md).
 
-This reports the build, not its test results. For those, follow the skill the
-status points to, or the `fix-accessibility-violations` skill for
-accessibility. To look a build up by its number, use the `query-chromatic`
-skill.
+This reports the build, not its test results. When the person asked for
+more than the status, such as what the changes are, go on in the same turn
+with the skill the status points to: `review-visual-changes` for PENDING,
+`fix-broken-stories` for BROKEN, or the `fix-accessibility-violations` skill
+for accessibility. To look a build up by its number, use the
+`query-chromatic` skill.
